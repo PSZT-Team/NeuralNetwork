@@ -7,6 +7,7 @@
 
 #include "Interface.h"
 #include "DataCollector.h"
+#include "OutputManager.h"
 #include <iostream>
 
 class Network {
@@ -23,6 +24,7 @@ public:
 private:
     Interface mInterface;
 	DataCollector mDataCollector;
+    OutputManager mOutputManager;
 };
 
 #endif

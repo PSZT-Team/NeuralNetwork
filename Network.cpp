@@ -5,16 +5,28 @@ Network::Network (int argc, char* argv[]) : mInterface (argc, argv) {
 }
 
 void Network::run () {
+    // TEMP
 	mInterface.printParams();
 	mInterface.printHelp ();
 	mInterface.printUsage ();
 
+    // Acquire data
 	std::string filename = mInterface.getStringParam("--file");
-	if (filename != "") {
-		mDataCollector.setFilename(filename);
-		mDataCollector.loadData();
-	}	
+    if (filename != "") {
+        mDataCollector.setFilename (filename);
+        mDataCollector.loadData ();
+    }
+    else {
+        std::cout << " >> No input file to read from!\n";
+        return;
+    }
 
-	std::cout << "Press Enter to continue...";
-	std::cin.get ();
+    // Saving results
+    filename = mInterface.getStringParam ("--output");
+    if (filename != "") {
+        mOutputManager.setResultsFilename (filename);
+    }
+    mOutputManager.saveResults (&mDataCollector);
+
+    // Saving stats
 }
