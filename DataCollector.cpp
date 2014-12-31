@@ -82,17 +82,48 @@ void DataCollector::getDataFromFile ()
 				default:
 					break;
 			}
-
-
-	
 		}
 		
-
 		tempData->setId(dataCounter);
 		data.push_back (tempData);
 		++dataCounter;
 	}
 
+}
+
+
+std::vector<ProteinData*> DataCollector::getLearningData (const int & percentage){
+	std::vector <ProteinData*> lerningData;
+	if (percentage < 0 || percentage > 100)
+		return lerningData;
+	int howMany = dataCounter * percentage / 100;
+	for (int i = 0; i < howMany; i++)
+		lerningData.push_back (new ProteinData (*data [i]));
+
+	return lerningData;
+}
+
+std::vector<ProteinData*> DataCollector::getCheckData (const int & percentage) {
+	std::vector <ProteinData*> checkData;
+	if (percentage < 0 || percentage > 100)
+		return checkData;
+
+	int first = dataCounter * (100 - percentage) / 100;	
+	
+	for (int i = first; i < dataCounter; i++)
+		checkData.push_back (new ProteinData (*data[i]));
+
+	return checkData;
+}
+
+std::vector <ProteinData*> DataCollector::getTestData (const int & percentage)  {
+	std::vector <ProteinData*> testData = getCheckData (percentage);
+
+
+	for (auto &i : testData) {
+		i->setReactionResult (0);
+	}
+	return testData;
 }
 
 
@@ -105,11 +136,9 @@ void DataCollector::showData () {
 
 
 void DataCollector::shuffleData ()  {
-
 	std::random_device rd;
 	std::mt19937 g (rd ());
 	std::shuffle (data.begin (), data.end (), g);
-
 
 }
 
@@ -120,8 +149,9 @@ void DataCollector::loadData () {
 	closeFile ();
 	showData ();
 	shuffleData ();
-//	showData ();
+	//	showData ();
 }
+
 
 void DataCollector::setFilename(const std::string filename) {
 	this->file = filename;

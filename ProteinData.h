@@ -1,7 +1,8 @@
 //@author Andrzej Siadkowski
 //data container with for proteins
 
-#pragma once
+#ifndef PROTEINDATA
+#define PROTEINDATA
 class ProteinData {
 public:
 	ProteinData ();
@@ -31,3 +32,4 @@ private:
 
 };
 
+#endif
