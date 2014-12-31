@@ -6,6 +6,7 @@
 #define NETWORK
 
 #include "Interface.h"
+#include "DataCollector.h"
 #include <iostream>
 
 class Network {
@@ -21,6 +22,9 @@ public:
 
 private:
     Interface mInterface;
+	DataCollector *mDataCollector;
+
+	std::string a;
 };
 
 #endif
