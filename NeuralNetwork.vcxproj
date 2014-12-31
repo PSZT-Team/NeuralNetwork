@@ -67,12 +67,14 @@
     <ClCompile Include="DataCollector.cpp" />
     <ClCompile Include="Interface.cpp" />
     <ClCompile Include="Network.cpp" />
+    <ClCompile Include="ProteinData.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DataCollector.h" />
     <ClInclude Include="Interface.h" />
     <ClInclude Include="Network.h" />
+    <ClInclude Include="ProteinData.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

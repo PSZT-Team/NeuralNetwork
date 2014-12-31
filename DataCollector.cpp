@@ -66,16 +66,16 @@ void DataCollector::getDataFromFile ()
 
 			switch (counter) {
 				case 0:
-					tempData->data1 = number;
+					tempData->setData1(number);
 					break;
 				case 1:
-					tempData->data2 = number;
+					tempData->setData2 (number);
 					break;
 				case 2:
-					tempData->data3 = number;
+					tempData->setData3 (number);
 					break;
 				case 3:
-					tempData->reactionResult = number;
+					tempData->setReactionResult (number);
 					break;
 				default:
 					break;
@@ -86,7 +86,7 @@ void DataCollector::getDataFromFile ()
 		}
 		
 
-		tempData->number = dataCounter;
+		tempData->setId(dataCounter);
 		data.push_back (tempData);
 		++dataCounter;
 	}
@@ -96,13 +96,13 @@ void DataCollector::getDataFromFile ()
 
 void DataCollector::showData () {
 	for (auto &i : data) {
-		std::cout << i->number << " ---- " << i->data1 << " " << i->data2 << " " << i->data3 << " " << i->reactionResult << "\n";
+		std::cout << i->getId()<< " ---- " << i->getData1() << " " << i->getData2() << " " << i->getData3() << " " << i->getReactionResult() << "\n";
 	}
 
 }
 
 
-void DataCollector::randomData ()  {
+void DataCollector::shuffleData ()  {
 
 	std::random_device rd;
 	std::mt19937 g (rd ());
@@ -117,7 +117,7 @@ void DataCollector::loadData () {
 	getDataFromFile ();
 	closeFile ();
 	showData ();
-	randomData ();
+	shuffleData ();
 //	showData ();
 }
 

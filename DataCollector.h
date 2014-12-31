@@ -11,15 +11,7 @@
 #include <vector>
 #include <algorithm>   
 #include <random>
-
-struct ProteinData {
-	float data1;
-	float data2;
-	float data3;
-	int reactionResult;
-	int number;
-
-};
+#include "ProteinData.h"
 
 class DataCollector {
 public:
@@ -28,6 +20,7 @@ public:
 
 	//loading data from file 
 	void loadData ();
+	void getData ();
 
 private:
 
