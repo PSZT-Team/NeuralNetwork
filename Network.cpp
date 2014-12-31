@@ -25,8 +25,10 @@ void Network::run () {
     filename = mInterface.getStringParam ("--output");
     if (filename != "") {
         mOutputManager.setResultsFilename (filename);
+        mOutputManager.saveResults (&mDataCollector, false);
     }
-    mOutputManager.saveResults (&mDataCollector);
+    else
+        mOutputManager.saveResults (&mDataCollector);
 
     // Saving stats
 }
