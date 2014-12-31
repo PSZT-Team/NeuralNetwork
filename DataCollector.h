@@ -23,11 +23,14 @@ struct ProteinData {
 
 class DataCollector {
 public:
+	DataCollector();
 	DataCollector (const std::string&  filename);
 	~DataCollector ();
 
 	//loading data from file 
 	void loadData ();
+
+	void setFilename (const std::string filename);
 
 private:
 

@@ -26,6 +26,9 @@ public:
     void printUsage ();
     void printHelp ();
 
+	// Getters
+	std::string getStringParam (const std::string key);
+
 private:
     int mArgCount = 0;
 

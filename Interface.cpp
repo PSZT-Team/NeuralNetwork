@@ -61,3 +61,11 @@ void Interface::printHelp () {
 void Interface::printUsage () {
     std::cout << mUsageMessage << "\n";
 }
+
+std::string Interface::getStringParam(const std::string key)
+{
+	if (mapParamStrings.find(key) != mapParamStrings.end())
+		return mapParamStrings[key].first;
+	else
+		return "";
+}

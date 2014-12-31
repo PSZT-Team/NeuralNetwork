@@ -1,5 +1,7 @@
 #include "DataCollector.h"
 
+DataCollector::DataCollector() {
+}
 
 DataCollector::DataCollector (const std::string&  filename) : file (filename), dataCounter  (0) {
 }
@@ -119,5 +121,9 @@ void DataCollector::loadData () {
 	showData ();
 	randomData ();
 //	showData ();
+}
+
+void DataCollector::setFilename(const std::string filename) {
+	this->file = filename;
 }
 

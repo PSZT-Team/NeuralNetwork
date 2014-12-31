@@ -22,9 +22,7 @@ public:
 
 private:
     Interface mInterface;
-	DataCollector *mDataCollector;
-
-	std::string a;
+	DataCollector mDataCollector;
 };
 
 #endif
