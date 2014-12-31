@@ -1,3 +1,6 @@
+//@author Andrzej Siadkowski
+//data container with for proteins
+
 #pragma once
 class ProteinData {
 public:

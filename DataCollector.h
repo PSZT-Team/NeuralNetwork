@@ -24,13 +24,14 @@ public:
 	void getData ();
 
 	void setFilename (const std::string filename);
+	void shuffleData ();
 
 private:
 
 	int assignFile ();
 	void getDataFromFile ();
 	void closeFile ();
-	void randomData ();
+	
 	void showData ();
 	
 	std::fstream dataFile;
