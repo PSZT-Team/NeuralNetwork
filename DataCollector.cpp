@@ -10,13 +10,13 @@ DataCollector::DataCollector (const std::string&  filename) : file (filename), d
 DataCollector::~DataCollector () {
 }
 
-int DataCollector::assignFile () {
+bool DataCollector::assignFile () {
 	dataFile.open (file);
 	if (!(dataFile.is_open ())) {
-		std::cout << "ERROR OCURED \n";
-		return 1;
+		std::cout << " >> Error! Opening file failed (file: " + file + ").\n";
+		return false;
 	}
-	return 0;
+	return true;
 }
 
 void DataCollector::closeFile () {
@@ -143,13 +143,17 @@ void DataCollector::shuffleData ()  {
 }
 
 
-void DataCollector::loadData () {
-	assignFile ();
+bool DataCollector::loadData () {
+    if (!assignFile ())
+        return false;
+
 	getDataFromFile ();
 	closeFile ();
 	showData ();
 	shuffleData ();
 	//	showData ();
+
+    return true;
 }
 
 

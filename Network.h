@@ -22,6 +22,16 @@ public:
     void run ();
 
 private:
+    // Load data from file (if given)
+    bool acquireData ();
+
+    // Saving results to file (if needed)
+    void saveResults ();
+
+    // Saving stats to file (if needed)
+    void saveStats ();
+
+    // Network modules
     Interface mInterface;
 	DataCollector mDataCollector;
     OutputManager mOutputManager;

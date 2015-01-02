@@ -16,7 +16,6 @@ bool OutputManager::saveResults (DataCollector * dataCollector, bool defaultPath
         std::stringstream ss;
         ss << std::put_time (&localTime, "_%Y-%m-%d_%H.%M.%S.txt");
         resultsPath = RESULTS_FOLDER + resultsPath + ss.str();
-        statsPath = STATS_FOLDER + statsPath + ss.str ();
     }
 
     // Saving results
@@ -33,6 +32,21 @@ bool OutputManager::saveResults (DataCollector * dataCollector, bool defaultPath
 
     output.close ();
 
+    return true;
+}
+
+bool OutputManager::saveStats (bool defaultPath) {
+    std::fstream output;
+    std::string statsPath = mStatsFilename;
+
+    if (defaultPath) {
+        auto time = std::time (nullptr);
+        auto localTime = *std::localtime (&time);
+        std::stringstream ss;
+        ss << std::put_time (&localTime, "_%Y-%m-%d_%H.%M.%S.txt");
+        statsPath = STATS_FOLDER + statsPath + ss.str ();
+    }
+
     // Saving stats
     output.open (statsPath, std::ios::out | std::ios::trunc);
     if (!output.is_open ()) {
@@ -40,6 +54,7 @@ bool OutputManager::saveResults (DataCollector * dataCollector, bool defaultPath
         return false;
     }
 
+    // TEMP
     output << "69% ;>\n";
 
     output.close ();

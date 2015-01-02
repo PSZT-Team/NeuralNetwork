@@ -20,7 +20,7 @@ public:
 	~DataCollector ();
 
 	//loading data from file 
-	void loadData ();
+	bool loadData ();
 	void getData ();
 
 	void setFilename (const std::string filename);
@@ -50,7 +50,7 @@ public:
 
 private:
 
-	int assignFile ();
+	bool assignFile ();
 	void getDataFromFile ();
 	void closeFile ();
 	

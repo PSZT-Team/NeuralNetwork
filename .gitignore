@@ -5,6 +5,9 @@
 _[Rr]esults/
 _[Ss]tats/
 
+# Project data files created accidentally in root folder
+./*.txt
+
 # User-specific files
 *.suo
 *.user

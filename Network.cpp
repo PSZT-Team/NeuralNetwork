@@ -10,25 +10,45 @@ void Network::run () {
 	mInterface.printHelp ();
 	mInterface.printUsage ();
 
-    // Acquire data
-	std::string filename = mInterface.getStringParam("--file");
+    if (!this->acquireData ())
+        return;
+
+    this->saveResults ();
+    this->saveStats ();
+}
+
+bool Network::acquireData () {
+    std::string filename = mInterface.getStringParam ("--file");
     if (filename != "") {
         mDataCollector.setFilename (filename);
         mDataCollector.loadData ();
     }
     else {
         std::cout << " >> No input file to read from!\n";
-        return;
+        return false;
     }
 
+    return true;
+}
+
+void Network::saveResults () {
     // Saving results
-    filename = mInterface.getStringParam ("--output");
+    std::string filename = mInterface.getStringParam ("--output");
     if (filename != "") {
         mOutputManager.setResultsFilename (filename);
         mOutputManager.saveResults (&mDataCollector, false);
     }
     else
         mOutputManager.saveResults (&mDataCollector);
+}
 
+void Network::saveStats () {
     // Saving stats
+    std::string filename = mInterface.getStringParam ("--stats");
+    if (filename != "") {
+        mOutputManager.setStatsFilename (filename);
+        mOutputManager.saveStats (false);
+    }
+    else
+        mOutputManager.saveStats ();
 }
