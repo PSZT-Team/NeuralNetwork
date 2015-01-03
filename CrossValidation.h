@@ -9,11 +9,12 @@
 #define CV_ITERATIONS_NUMBER 10
 
 #include <array>
+#include <iomanip>
 
 class CrossValidation {
 public:
-    CrossValidation ();
-    ~CrossValidation ();
+    CrossValidation () {};
+    ~CrossValidation () {};
 
     // Hold all importatant calculation for current iteration
     typedef struct IterationInfo {
@@ -33,10 +34,33 @@ public:
         float mAUC;         // = (1 + sensivity - FP Rate) / 2,  where FP Rate = FP / (FP + TP)
     };
 
+    // Insert new set of data
+    void addIterationInfo (IterationInfo & iterationInfo);
+
 private:
     // Holds all CVIteration
     std::array <IterationInfo, CV_ITERATIONS_NUMBER> mData;
+
+    // Current inserted iteration counter
+    unsigned int mIterationCount = 0;
+
+    // Output stream operator
+    friend std::ostream & operator<< (std::ostream & out, CrossValidation & object);
 };
+
+// Output stream definition
+std::ostream & operator<< (std::ostream & out, CrossValidation & cv) {
+    out << "Iterations number: " << CV_ITERATIONS_NUMBER << "\n";
+
+    // Return formatted data from all iterations
+    for (unsigned int i = 0; i < CV_ITERATIONS_NUMBER; ++i) {
+        CrossValidation::IterationInfo iteration = cv.mData[i];
+
+        out << std::setw (4) << iteration.mTP << "\n";
+    }
+
+    return out;
+}
 
 #endif
 
