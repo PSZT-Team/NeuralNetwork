@@ -1,6 +1,7 @@
 /**
     Organizes input parameters, filenames and displays useful information.
 */
+
 #ifndef INTERFACE
 #define INTERFACE
 
