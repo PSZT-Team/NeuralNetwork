@@ -27,26 +27,31 @@ public:
 	void shuffleData ();
 
 	/*
-	function returns vector with pointers to protein's data.
-	param percentage is the percentage of data which will be used in lerning process
-	returns first percentage% of data;
+	function returns vector with pointers to protein's data, from which neutral network will be lerning.
+	Params begin and length define part of data which 
+	WILL
+	NOT 
+	BE 
+	USED
+	in lerning process.
+	@param begin - first avoided data cell 
+	@param length - length of avoided part of data
 	*/
-	std::vector <ProteinData*> getLearningData (const int & percentage);
+	std::vector <ProteinData*> getLearningData (const int & begin, const int & length );
 
 	/*
-	function returns vector with pointers to protein's data.
-	param percentage is the percentage of data which will be used in testing and discovering process
-	returns last percentage% of data, where every protein has 0 as a result of the reaction;
+	function returns vector with pointers to protein's data, which will be used in testing and discovering process
+	@param begin - first data cell, which will be used in testing process
+	@param length - lenght of data vector used in testing process
 	*/
-	std::vector <ProteinData*> getTestData (const int & percentage);
+	std::vector <ProteinData*> getTestData (const int & begin, const int & length);
 	
 	/*
-	function returns vector with pointers to protein's data.
-	param percentage is the percentage of data which will be used in 
-	checking the accuracy of testing process
-	returns last percentage% of data;
-	*/
-	std::vector <ProteinData*> getCheckData (const int & percentage);
+	function returns vector with pointers to protein's data, whitch will be used in checking the neutral network correctness 
+	@param begin - first data cell, which will be used in checking process
+	@param length - lenght of data vector used in checking process
+		*/
+	std::vector <ProteinData*> getCheckData (const int & begin, const int & length);
 
     // Getters
 

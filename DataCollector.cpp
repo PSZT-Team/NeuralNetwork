@@ -11,7 +11,7 @@ DataCollector::~DataCollector () {
 }
 
 unsigned int DataCollector::getDataCount () {
-    return data.size ();
+	return data.size ();
 }
 
 bool DataCollector::assignFile () {
@@ -88,7 +88,7 @@ void DataCollector::getDataFromFile ()
 			}
 		}
 		
-        tempData->setId (data.size ());
+		tempData->setId (data.size ());
 		data.push_back (tempData);
 		//++dataCounter;
 	}
@@ -96,37 +96,35 @@ void DataCollector::getDataFromFile ()
 }
 
 
-std::vector<ProteinData*> DataCollector::getLearningData (const int & percentage){
+std::vector<ProteinData*> DataCollector::getLearningData (const int & begin, const int & length){
 	std::vector <ProteinData*> lerningData;
-	if (percentage < 0 || percentage > 100)
-		return lerningData;
-    int howMany = data.size () * percentage / 100;
-	for (int i = 0; i < howMany; i++)
-		lerningData.push_back (new ProteinData (*data [i]));
 
+	for (int i = 0; i < data.size (); ++i)
+		if (!(i>=begin && i < (begin+length)))
+			lerningData.push_back (new ProteinData (*data [i]));
 	return lerningData;
 }
 
-std::vector<ProteinData*> DataCollector::getCheckData (const int & percentage) {
+std::vector<ProteinData*> DataCollector::getCheckData (const int & begin, const int & length) {
 	std::vector <ProteinData*> checkData;
-	if (percentage < 0 || percentage > 100)
-		return checkData;
-
-    int first = data.size () * (100 - percentage) / 100;
 	
-    for (unsigned int i = first; i < data.size (); i++)
+	int last = begin + length;
+	if (last > data.size ())
+		last = data.size ();
+
+	for (unsigned int i = begin; i < last; ++i)
 		checkData.push_back (new ProteinData (*data[i]));
 
 	return checkData;
 }
 
-std::vector <ProteinData*> DataCollector::getTestData (const int & percentage)  {
-	std::vector <ProteinData*> testData = getCheckData (percentage);
-
+std::vector <ProteinData*> DataCollector::getTestData (const int & begin, const int & length) {
+	std::vector <ProteinData*> testData = getCheckData (begin, length);
 
 	for (auto &i : testData) {
 		i->setReactionResult (0);
 	}
+
 	return testData;
 }
 
@@ -148,8 +146,8 @@ void DataCollector::shuffleData ()  {
 
 
 bool DataCollector::loadData () {
-    if (!assignFile ())
-        return false;
+	if (!assignFile ())
+		return false;
 
 	getDataFromFile ();
 	closeFile ();
@@ -157,7 +155,7 @@ bool DataCollector::loadData () {
 	shuffleData ();
 	//	showData ();
 
-    return true;
+	return true;
 }
 
 

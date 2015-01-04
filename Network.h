@@ -37,6 +37,8 @@ private:
 	DataCollector mDataCollector;
     OutputManager mOutputManager;
     CrossValidation mCrossValidation;
+	
+
 };
 
 #endif
