@@ -67,7 +67,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CrossValidation.cpp" />
+    <ClCompile Include="CrossValidator.cpp" />
     <ClCompile Include="DataCollector.cpp" />
     <ClCompile Include="Interface.cpp" />
     <ClCompile Include="Layer.cpp" />
@@ -78,9 +78,10 @@
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CrossValidation.h" />
+    <ClInclude Include="CrossValidator.h" />
     <ClInclude Include="DataCollector.h" />
     <ClInclude Include="Interface.h" />
+    <ClInclude Include="IterationInfo.h" />
     <ClInclude Include="Layer.h" />
     <ClInclude Include="Network.h" />
     <ClInclude Include="Neuron.h" />

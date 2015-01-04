@@ -8,7 +8,7 @@
 #include "Interface.h"
 #include "DataCollector.h"
 #include "OutputManager.h"
-#include "CrossValidation.h"
+#include "CrossValidator.h"
 #include <iostream>
 
 class Network {
@@ -36,7 +36,7 @@ private:
     Interface mInterface;
 	DataCollector mDataCollector;
     OutputManager mOutputManager;
-    CrossValidation mCrossValidation;
+    CrossValidator mCrossValidator;
 	
 
 };

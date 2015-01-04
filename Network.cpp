@@ -13,7 +13,10 @@ void Network::run () {
     if (!this->acquireData ())
         return;
 
-    mCrossValidation.setCapacity (mDataCollector.getDataCount ());
+    mCrossValidator.setCapacity (mDataCollector.getDataCount ());
+    
+    // TEMP
+    mCrossValidator.fillWithRandomData ();
 
     this->saveResults ();
     this->saveStats ();

@@ -33,13 +33,13 @@
     <ClCompile Include="OutputManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CrossValidation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Neuron.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Layer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CrossValidator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -59,13 +59,16 @@
     <ClInclude Include="OutputManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CrossValidation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Neuron.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Layer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CrossValidator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IterationInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
