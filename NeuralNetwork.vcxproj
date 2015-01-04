@@ -70,7 +70,9 @@
     <ClCompile Include="CrossValidation.cpp" />
     <ClCompile Include="DataCollector.cpp" />
     <ClCompile Include="Interface.cpp" />
+    <ClCompile Include="Layer.cpp" />
     <ClCompile Include="Network.cpp" />
+    <ClCompile Include="Neuron.cpp" />
     <ClCompile Include="OutputManager.cpp" />
     <ClCompile Include="ProteinData.cpp" />
     <ClCompile Include="Source.cpp" />
@@ -79,7 +81,9 @@
     <ClInclude Include="CrossValidation.h" />
     <ClInclude Include="DataCollector.h" />
     <ClInclude Include="Interface.h" />
+    <ClInclude Include="Layer.h" />
     <ClInclude Include="Network.h" />
+    <ClInclude Include="Neuron.h" />
     <ClInclude Include="OutputManager.h" />
     <ClInclude Include="ProteinData.h" />
   </ItemGroup>
