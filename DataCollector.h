@@ -21,7 +21,7 @@ public:
 
 	//loading data from file 
 	bool loadData ();
-	void getData ();
+	//void getData ();
 
 	void setFilename (const std::string filename);
 	void shuffleData ();
@@ -48,6 +48,10 @@ public:
 	*/
 	std::vector <ProteinData*> getCheckData (const int & percentage);
 
+    // Getters
+
+    unsigned int getDataCount ();   // Return number of all records.
+
 private:
 
 	bool assignFile ();
@@ -60,7 +64,6 @@ private:
 	std::string file;
 	
 	std::vector <ProteinData*> data;
-	int dataCounter;
 };
 
 #endif

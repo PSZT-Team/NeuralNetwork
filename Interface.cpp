@@ -50,16 +50,18 @@ void Interface::printParams () {
     // Print filenames params
     for (auto &x : mapParamStrings) {
         if (x.second.first != "")
-            std::cout << x.first << " ==> " << x.second.first << "\n";
+            std::cout << std::left << std::setw(10) << x.first << "==>\t" << x.second.first << "\n";
     }
+
+    std::cout << "\n";
 }
 
 void Interface::printHelp () {
-    std::cout << mHelpMessage << "\n";
+    std::cout << mHelpMessage << "\n\n";
 }
 
 void Interface::printUsage () {
-    std::cout << mUsageMessage << "\n";
+    std::cout << mUsageMessage << "\n\n";
 }
 
 std::string Interface::getStringParam(const std::string key)

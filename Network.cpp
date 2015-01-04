@@ -13,6 +13,8 @@ void Network::run () {
     if (!this->acquireData ())
         return;
 
+    mCrossValidation.setCapacity (mDataCollector.getDataCount ());
+
     this->saveResults ();
     this->saveStats ();
 }
@@ -24,7 +26,7 @@ bool Network::acquireData () {
         mDataCollector.loadData ();
     }
     else {
-        std::cout << " >> No input file to read from!\n";
+        std::cout << " >> ERROR: No input file to read from!\n";
         return false;
     }
 

@@ -3,11 +3,15 @@
 DataCollector::DataCollector() {
 }
 
-DataCollector::DataCollector (const std::string&  filename) : file (filename), dataCounter  (0) {
+DataCollector::DataCollector (const std::string&  filename) : file (filename) {
 }
 
 
 DataCollector::~DataCollector () {
+}
+
+unsigned int DataCollector::getDataCount () {
+    return data.size ();
 }
 
 bool DataCollector::assignFile () {
@@ -25,7 +29,7 @@ void DataCollector::closeFile () {
 
 void DataCollector::getDataFromFile ()
 {
-	char sep;
+	//char sep;
 
 	std::string s;
 	while (dataFile) {
@@ -84,9 +88,9 @@ void DataCollector::getDataFromFile ()
 			}
 		}
 		
-		tempData->setId(dataCounter);
+        tempData->setId (data.size ());
 		data.push_back (tempData);
-		++dataCounter;
+		//++dataCounter;
 	}
 
 }
@@ -96,7 +100,7 @@ std::vector<ProteinData*> DataCollector::getLearningData (const int & percentage
 	std::vector <ProteinData*> lerningData;
 	if (percentage < 0 || percentage > 100)
 		return lerningData;
-	int howMany = dataCounter * percentage / 100;
+    int howMany = data.size () * percentage / 100;
 	for (int i = 0; i < howMany; i++)
 		lerningData.push_back (new ProteinData (*data [i]));
 
@@ -108,9 +112,9 @@ std::vector<ProteinData*> DataCollector::getCheckData (const int & percentage) {
 	if (percentage < 0 || percentage > 100)
 		return checkData;
 
-	int first = dataCounter * (100 - percentage) / 100;	
+    int first = data.size () * (100 - percentage) / 100;
 	
-	for (int i = first; i < dataCounter; i++)
+    for (unsigned int i = first; i < data.size (); i++)
 		checkData.push_back (new ProteinData (*data[i]));
 
 	return checkData;
@@ -149,7 +153,7 @@ bool DataCollector::loadData () {
 
 	getDataFromFile ();
 	closeFile ();
-	showData ();
+	//showData ();
 	shuffleData ();
 	//	showData ();
 

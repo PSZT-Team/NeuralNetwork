@@ -21,7 +21,7 @@ bool OutputManager::saveResults (DataCollector * dataCollector, bool defaultPath
     // Saving results
     output.open (resultsPath, std::ios::out | std::ios::trunc);
     if (!output.is_open ()) {
-        std::cout << " >> Saving results to file failed!  (file: " + resultsPath + ")\n";
+        std::cout << " >> ERROR: Saving results to file failed!  (file: " + resultsPath + ")\n";
         return false;
     }
 
@@ -50,7 +50,7 @@ bool OutputManager::saveStats (bool defaultPath) {
     // Saving stats
     output.open (statsPath, std::ios::out | std::ios::trunc);
     if (!output.is_open ()) {
-        std::cout << " >> Saving results to file failed!  (file: " + statsPath + ")\n";
+        std::cout << " >> ERROR: Saving results to file failed!  (file: " + statsPath + ")\n";
         return false;
     }
 
