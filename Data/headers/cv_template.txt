@@ -1,0 +1,11 @@
+### CROSS VALIDATION RESULTS ###
+
+DATE       | $date 
+ITERATIONS | $iterations
+RECORDS    | $records
+
+ITERATION | TP    | TN    | FP    | FN    | ACCU. | SPEC. | SENS. | PREC. | GMEAN | AUC   | F1    | MCC    |
+============================================================================================================
+$rows
+------------------------------------------------------------------------------------------------------------
+AVERAGE   | $average

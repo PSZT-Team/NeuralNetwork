@@ -7,8 +7,8 @@
 #define CROSS_VALIDATION
 
 #define CV_ITERATIONS_NUMBER 10
-#define CV_RESULTS_FILE "cvResults.txt"
-#define CV_RESULTS_FORMATTED_FILE "cvResults_formatted.txt"
+#define CV_GLOBAL_FILE "cvResults.txt"
+#define CV_GLOBAL_FORMATTED_FILE "cvResults_formatted.txt"
 
 #include "IterationInfo.h"
 #include <array>
@@ -23,6 +23,11 @@ public:
     // \param bool : Actual result.
     typedef std::vector <std::pair <bool, bool> > TestResults;
 
+    // Container for all iterations results.
+    // \param IterationInfo : Results of one iteration.
+    // \param int : Number of all iterations.
+    typedef std::array <IterationInfo<unsigned int>, CV_ITERATIONS_NUMBER> DataContainer;
+
     CrossValidator () {};
     ~CrossValidator () {};
 
@@ -32,17 +37,25 @@ public:
 
     // Insert new set of data.
     // \param IterationInfo : New iteration to be inserted.
-    void addIterationInfo (IterationInfo & iterationInfo);
+    void addIterationInfo (IterationInfo<unsigned int> & iterationInfo);
 
     // Insert new set of data based on provided results.
     // \param TestResult : Current iteration results.
     void addIterationInfo (TestResults & testResults);
 
-    // Return number of records for next test set and 0 if all are already used.
+    /// Getters
+
+    // Returns pointer to DataContainer of this object.
+    DataContainer * getDataContainer ();
+
+    // Return number of records for next test set.
     unsigned int getTestSetSize ();
 
     // Return first unsused record number to be included in a next test set.
     unsigned int getIterationStartRecordPosition ();
+
+    // Return average values from all IterationInfo's holding in this object's dataset.
+    IterationInfo<float> getAverageIterationInfo ();
 
     /// Setters
 
@@ -64,7 +77,7 @@ public:
 
 private:
     // Holds all IterationInfo's
-    std::array <IterationInfo, CV_ITERATIONS_NUMBER> mData;
+    DataContainer mData;
 
     // Current inserted iteration counter
     unsigned int mIterationCount = 0;
@@ -72,19 +85,20 @@ private:
     // Number of all records
     unsigned int mCapacity;
 
+    // TEMP
     // Output stream operator
-    friend std::ostream & operator<< (std::ostream & out, CrossValidator & cv) {
-        out << "Iterations number: " << CV_ITERATIONS_NUMBER << "\n";
+    //friend std::ostream & operator<< (std::ostream & out, CrossValidator & cv) {
+    //    out << "Iterations number: " << CV_ITERATIONS_NUMBER << "\n";
 
-        // Return formatted data from all iterations
-        for (unsigned int i = 0; i < CV_ITERATIONS_NUMBER; ++i) {
-            IterationInfo iteration = cv.mData[i];
+    //    // Return formatted data from all iterations
+    //    for (unsigned int i = 0; i < CV_ITERATIONS_NUMBER; ++i) {
+    //        IterationInfo iteration = cv.mData[i];
 
-            out << std::setw (4) << iteration.mTP << "\n";
-        }
+    //        out << std::setw (4) << iteration.mTP << "\n";
+    //    }
 
-        return out;
-    }
+    //    return out;
+    //}
 
     
     // TEMP

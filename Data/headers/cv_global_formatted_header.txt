@@ -1,0 +1,4 @@
+### CROSS VALIDATION GLOBAL RESULTS ###
+
+DATE                | ITERATIONS | RECORDS | TP    | TN    | FP    | FN    | ACCU. | SPEC. | SENS. | PREC. | GMEAN | AUC   | F1    | MCC    |
+=============================================================================================================================================

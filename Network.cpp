@@ -52,8 +52,8 @@ void Network::saveStats () {
     std::string filename = mInterface.getStringParam ("--stats");
     if (filename != "") {
         mOutputManager.setStatsFilename (filename);
-        mOutputManager.saveStats (false);
+        mOutputManager.saveStats (&mCrossValidator,false);
     }
     else
-        mOutputManager.saveStats ();
+        mOutputManager.saveStats (&mCrossValidator);
 }
