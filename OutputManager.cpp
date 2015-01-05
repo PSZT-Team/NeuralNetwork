@@ -77,8 +77,8 @@ bool OutputManager::saveStats (CrossValidator * crossValidator, bool defaultPath
 
     // Prepare headers
     replaceKeyword ("$date", currentDateTime, templateContent);
-    replaceKeyword ("$iterations", std::to_string(CV_ITERATIONS_NUMBER), templateContent);
-    replaceKeyword ("$records", std::to_string (crossValidator->getTestSetSize() * CV_ITERATIONS_NUMBER), templateContent);
+    replaceKeyword ("$iterations", std::to_string (CV_ITERATIONS_NUMBER), templateContent);
+    replaceKeyword ("$records", std::to_string (crossValidator->getTestSetSize () * CV_ITERATIONS_NUMBER), templateContent);
 
     // Prepare data for non-global stats.
     for (unsigned int iteration = 0; iteration < CV_ITERATIONS_NUMBER; ++iteration) {
@@ -89,12 +89,15 @@ bool OutputManager::saveStats (CrossValidator * crossValidator, bool defaultPath
     // Insert data and average.
     IterationInfo<float> averageII = crossValidator->getAverageIterationInfo ();
     replaceKeyword ("$rows", data, templateContent);
-    replaceKeyword ("$average", prepareRow(&averageII, false, true, true), templateContent);
+    replaceKeyword ("$average", prepareRow (&averageII, false, true, true), templateContent);
 
     // Save stats.
     output << templateContent;
-
     output.close ();
+
+    // Save global stats as well.
+    if (!saveGlobalStats (&averageII, currentDateTime))
+        return false;
 
     return true;
 }
@@ -107,35 +110,37 @@ void OutputManager::setStatsFilename (const std::string filename) {
     this->mStatsFilename = filename;
 }
 
-void OutputManager::saveGlobalStats () {
+template <typename Type>
+bool OutputManager::saveGlobalStats (IterationInfo<Type> * iterationInfo, const std::string currentDatetime) {
     std::fstream output;
-    std::string row = "", rowF = "";
-    std::string globalStatsPath = STATS_FOLDER, globalStatsPathF = STATS_FOLDER;
+    //std::string row = "", rowF = "";
+    std::string globalStatsPath = DATA_FOLDER, globalStatsPathF = DATA_FOLDER;
     globalStatsPath += CV_GLOBAL_FILE;
     globalStatsPathF += CV_GLOBAL_FORMATTED_FILE;
 
-    auto time = std::time (nullptr);
-    auto localTime = *std::localtime (&time);
-    std::stringstream ss;
-    ss << std::put_time (&localTime, "_%Y-%m-%d_%H.%M.%S.txt");
-    //statsPath = STATS_FOLDER + statsPath + ss.str ();
-
-    // Open file.
-   /* output.open (statsPath, std::ios::out | std::ios::trunc);
+    // Open global NON-formatted file.
+    output.open (globalStatsPath, std::ios::out | std::ios::app);
     if (!output.is_open ()) {
-        std::cout << " >> ERROR: Saving results to file failed!  (file: " + statsPath + ")\n";
+        std::cout << " >> ERROR: Saving global results to file failed!  (file: " + globalStatsPath + ")\n";
         return false;
     }
 
-    Save stats.
-
-
-        TEMP
-        utput << "69% ;>\n";*/
-
-
-
+    // Save non-formatted file data.
+    output << currentDatetime << ";" << prepareRow (iterationInfo, true, false);
     output.close ();
+
+    // Open global NON-formatted file.
+    output.open (globalStatsPathF, std::ios::out | std::ios::app);
+    if (!output.is_open ()) {
+        std::cout << " >> ERROR: Saving global formatted results to file failed!  (file: " + globalStatsPathF + ")\n";
+        return false;
+    }
+
+    // Save non-formatted file data.
+    output << currentDatetime << " | " << prepareRow (iterationInfo, true, true);
+    output.close ();
+
+    return true;
 }
 
 void OutputManager::replaceKeyword (const std::string keyword, const std::string value, std::string & text) {
@@ -143,7 +148,7 @@ void OutputManager::replaceKeyword (const std::string keyword, const std::string
     unsigned int keywordPos = text.find (keyword);
     if (keywordPos == std::string::npos) {
         std::cout << " >> ERROR: Keyword '" + keyword + "' cannot be found!\n" +
-                     "           Check  " + HEADERS_FOLDER + "  for  " + TEMPLATE_FILE + ".\n";
+            "           Check  " + HEADERS_FOLDER + "  for  " + TEMPLATE_FILE + ".\n";
         return;
     }
 
@@ -171,12 +176,20 @@ std::string OutputManager::prepareRow (IterationInfo<Type> * iterationInfo, bool
 
         // Formatted.
         if (isFormatted) {
-            // Add formatted date, iterations and records.
+            // Add formatted iterations and records.
+            row += formatWidth<unsigned int> (CV_ITERATIONS_NUMBER, 10, ' ', separator);
+            row += formatWidth<unsigned int> ((iterationInfo->mTP + iterationInfo->mTN +
+                iterationInfo->mFP + iterationInfo->mFN) * CV_ITERATIONS_NUMBER,
+                7, ' ', separator);
         }
         // Non-formatted.
         else {
             // Add non-formatted date, iterations and records.
             separator = ";";
+            row += formatWidth<unsigned int> (CV_ITERATIONS_NUMBER, 0, ' ', separator);
+            row += formatWidth<unsigned int> ((iterationInfo->mTP + iterationInfo->mTN +
+                iterationInfo->mFP + iterationInfo->mFN) * CV_ITERATIONS_NUMBER,
+                0, ' ', separator);
         }
     }
     // Non-global stats.
@@ -184,7 +197,7 @@ std::string OutputManager::prepareRow (IterationInfo<Type> * iterationInfo, bool
 
         // Average.
         if (isAverage) {
-           // DO NOTHING
+            // DO NOTHING
         }
         // Non-average/
         else {
@@ -209,7 +222,7 @@ std::string OutputManager::prepareRow (IterationInfo<Type> * iterationInfo, bool
     row += formatWidth<float> (iterationInfo->mAUC, size, '0', separator);
     row += formatWidth<float> (iterationInfo->mF1, size, '0', separator);
     row += formatWidth<float> (iterationInfo->mMCC, size, '0', separator, true);
-    
+
     row += "\n";
 
     return row;
@@ -217,11 +230,11 @@ std::string OutputManager::prepareRow (IterationInfo<Type> * iterationInfo, bool
 
 template <typename Type>
 std::string OutputManager::formatWidth (const Type value, const unsigned int width,
-                                        const char fill, const std::string separator, 
+                                        const char fill, const std::string separator,
                                         bool showPos) {
     std::stringstream ss;
-    ss << std::fixed << std::setprecision(3) << std::left << std::setw (width) 
-        << std::setfill(fill) << (showPos ? std::showpos : std::noshowpos) 
+    ss << std::fixed << std::setprecision (3) << std::left << std::setw (width)
+        << std::setfill (fill) << (showPos ? std::showpos : std::noshowpos)
         << value << separator;
 
     return ss.str ();

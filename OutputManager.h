@@ -38,7 +38,8 @@ public:
 
 private:
     // Saves global stats into special file.
-    void saveGlobalStats ();
+    template <typename Type>
+    bool saveGlobalStats (IterationInfo<Type> * iterationInfo, const std::string currentDatetime);
 
     // Replace file keyword with proper data
     // \param string keyword : Keyword in file to be found and replaced.
@@ -51,7 +52,7 @@ private:
     // \param int iteration : Subset number for parsing.
     // \param bool isGlobal : Specifies whether row is for global stats or not.
     // \param (opt) bool isFormatted : Specifies whether row has to be formatted in columns (only matters if isGlobal == true).
-    // \param (opt) bool isAverage : Specifies whether row is the latest row in the file and holds average values (only matters if isGlobal == false) .
+    // \param (opt) bool isAverage : Specifies whether row is the latest row in the file and holds average values (only matters if isGlobal == false).
     std::string prepareRow (CrossValidator::DataContainer * dataContainer, const unsigned int iteration,
                             bool isGlobal, bool isFormatted = false, bool isAverage = false);
 
@@ -59,7 +60,7 @@ private:
     // \param IterationInfo * : Pointer to particular data structure.
     // \param bool isGlobal : Specifies whether row is for global stats or not.
     // \param (opt) bool isFormatted : Specifies whether row has to be formatted in columns (only if isGlobal == true).
-    // \param (opt) bool isAverage : Specifies whether row is the latest row in the file and holds sum up values.
+    // \param (opt) bool isAverage : Specifies whether row is the latest row in the file and holds sum up values (only matters if isGlobal == false).
     template <typename Type>
     std::string prepareRow (IterationInfo<Type> * iterationInfo, bool isGlobal, 
                             bool isFormatted = false, bool isAverage = false);

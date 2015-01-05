@@ -7,8 +7,8 @@
 #define CROSS_VALIDATION
 
 #define CV_ITERATIONS_NUMBER 10
-#define CV_GLOBAL_FILE "cvResults.txt"
-#define CV_GLOBAL_FORMATTED_FILE "cvResults_formatted.txt"
+#define CV_GLOBAL_FILE "cv_global.txt"
+#define CV_GLOBAL_FORMATTED_FILE "cv_global_formatted.txt"
 
 #include "IterationInfo.h"
 #include <array>
