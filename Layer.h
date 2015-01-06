@@ -14,7 +14,7 @@ public:
 
 	void initializeLayer (const int& size);
 	
-	void commandToCalculate (const Layer& prevLayer);
+	void commandToLearn (const Layer& prevLayer);
 
 	/*
 	ONLY FOR INPUT LAYERS
@@ -25,7 +25,7 @@ public:
 	void setOutput (const ProteinData* & proteinData);
 
 	
-	std::vector<Neuron*> getNeurons ();
+	std::vector<const Neuron*> getNeurons ();
 	int getLayerSize ();
 
 

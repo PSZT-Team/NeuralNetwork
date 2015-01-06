@@ -96,16 +96,16 @@ void DataCollector::getDataFromFile ()
 }
 
 
-std::vector<ProteinData*> DataCollector::getLearningData (const int & begin, const int & length){
+std::vector<const ProteinData* &> DataCollector::getLearningData (const int & begin, const int & length){
 	std::vector <ProteinData*> lerningData;
 
 	for (int i = 0; i < data.size (); ++i)
 		if (!(i>=begin && i < (begin+length)))
 			lerningData.push_back (new ProteinData (*data [i]));
-	return lerningData;
+		return std::vector<const ProteinData* &> (lerningData.begin (), lerningData.end ());
 }
 
-std::vector<ProteinData*> DataCollector::getCheckData (const int & begin, const int & length) {
+std::vector<const ProteinData* &> DataCollector::getCheckData (const int & begin, const int & length) {
 	std::vector <ProteinData*> checkData;
 	
 	int last = begin + length;
@@ -115,19 +115,28 @@ std::vector<ProteinData*> DataCollector::getCheckData (const int & begin, const 
 	for (unsigned int i = begin; i < last; ++i)
 		checkData.push_back (new ProteinData (*data[i]));
 
-	return checkData;
+	return std::vector<const ProteinData* &> (checkData.begin (), checkData.end ());
+
 }
 
-std::vector <ProteinData*> DataCollector::getTestData (const int & begin, const int & length) {
-	std::vector <ProteinData*> testData = getCheckData (begin, length);
+std::vector <const ProteinData* &> DataCollector::getTestData (const int & begin, const int & length) {
+	std::vector <ProteinData*> testData;
+
+	int last = begin + length;
+	if (last > data.size ())
+		last = data.size ();
+
+	for (unsigned int i = begin; i < last; ++i) 
+		testData.push_back (new ProteinData (*data [i]));
+	
 
 	for (auto &i : testData) {
 		i->setReactionResult (0);
 	}
 
-	return testData;
+	return std::vector<const ProteinData* &> (testData.begin (), testData.end ());	
+	
 }
-
 
 void DataCollector::showData () {
 	for (auto &i : data) {
@@ -135,7 +144,6 @@ void DataCollector::showData () {
 	}
 
 }
-
 
 void DataCollector::shuffleData ()  {
 	std::random_device rd;

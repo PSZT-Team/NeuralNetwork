@@ -37,21 +37,21 @@ public:
 	@param begin - first avoided data cell 
 	@param length - length of avoided part of data
 	*/
-	std::vector <ProteinData*> getLearningData (const int & begin, const int & length );
+	std::vector <const ProteinData* &> getLearningData (const int & begin, const int & length );
 
 	/*
 	function returns vector with pointers to protein's data, which will be used in testing and discovering process
 	@param begin - first data cell, which will be used in testing process
 	@param length - lenght of data vector used in testing process
 	*/
-	std::vector <ProteinData*> getTestData (const int & begin, const int & length);
+	std::vector <const ProteinData* &> getTestData (const int & begin, const int & length);
 	
 	/*
 	function returns vector with pointers to protein's data, whitch will be used in checking the neutral network correctness 
 	@param begin - first data cell, which will be used in checking process
 	@param length - lenght of data vector used in checking process
 		*/
-	std::vector <ProteinData*> getCheckData (const int & begin, const int & length);
+	std::vector <const ProteinData* &> getCheckData (const int & begin, const int & length);
 
     // Getters
 
