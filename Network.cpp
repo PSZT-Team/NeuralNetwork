@@ -79,8 +79,14 @@ void Network::learn (const std::vector<ProteinData *> data) {
 		// PART 2 - INSTRUCTOR AND LEARNING
 		// i don't know where to put this error yet
 		//float error = dataSet->getReactionResult() - mLayersTable [mLayersTable.size () - 1]->getNeurons () [0]->getOutput ();
+		mLayersTable [mLayersTable.size () - 1]->outputLayerError (dataSet->getReactionResult());
 
-		
+		for (int i = mLayersTable.size() - 2; i >= 1 ; --i) {
+			mLayersTable [i]->calculateErrors (*mLayersTable [i + 1]);
+		}
+
+
+
 	}
 	
 }

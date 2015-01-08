@@ -17,7 +17,11 @@ public:
 	void initializeLayer (const int& size, const int& prevLayerSize);
 	
 	void commandToCalculate (const Layer& prevLayer);
+	
+	void calculateErrors (const Layer& nextLayer);
 
+	void outputLayerError (const int & output);
+	
 	/*
 	ONLY FOR INPUT LAYERS
 	TO DO (maybe) - CREATE InputLayer : Layer class
@@ -28,7 +32,9 @@ public:
 
 	
 	std::vector<Neuron*> getNeurons () const;
+	
 	int getLayerSize ();
+	
 
 private:
 	std::vector <Neuron*> neurons;

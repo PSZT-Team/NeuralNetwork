@@ -41,20 +41,33 @@ public:
 	*/
 	void correctWeight ();
 
+
+	void calculateError (const std::vector<Neuron*> & prevNeuronLayers, const int & neuronNumber);
+
+	void setError (const float & result);
+
+
 	/*
 	gets calculated output
 	necessary for next layer calculations
 	*/
 	float getOutput ();
 
+	float getWeight (const int & i); 
+
+	float getError ();
+
 	// ONLY FOR INPUT LAYER
 	void setOutput (const float & out);
+
+
 
 
 private:
 	std::vector <float> weight;
 	std::vector <float> prevWeight;
 	
+	float error;
 	float output;
 	
 

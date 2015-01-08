@@ -37,6 +37,17 @@ void Neuron::calculateOutput (const std::vector<Neuron*> & prevNeuronLayers) {
 
 }
 
+void Neuron::calculateError (const std::vector<Neuron*> & nextNeuronLayer, const int& neuronNumber) {
+	error = 0;
+
+	for (int i = 0; i < nextNeuronLayer.size (); ++i) {
+
+		// error += f'(x) * error[nextLayerAllNeurons]*weight[nextLayerAllNeurons][thisLayer]
+		error += (BETA * (1 - tanh (BETA*output) * tanh (BETA*output))) * (nextNeuronLayer[i]->getWeight (neuronNumber) * nextNeuronLayer[i]->getError());
+	}
+}
+
+
 void Neuron::initializeNeuron (const int & prevLayerSize) {
 	for (int i = 0; i < prevLayerSize; ++i)  {
 		weight.push_back (0.0f);
@@ -50,6 +61,12 @@ void Neuron::correctWeight () {
 	// TO DO! TO DO! TO DO!
 }
 
+
+float Neuron::getWeight (const int & i) {
+	return weight [i];
+}
+
+
 float Neuron::getOutput () {
 	return output;
 }
@@ -58,3 +75,11 @@ void Neuron::setOutput (const float & out) {
 	output = out;
 }
 
+void Neuron::setError (const float & result) {
+
+	error = result - output;
+}
+
+float Neuron::getError () {
+	return error;
+}

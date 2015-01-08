@@ -27,6 +27,19 @@ void Layer::commandToCalculate (const Layer& prevLayer) {
 
 }
 
+void Layer::calculateErrors (const Layer& nextLayer) {
+	
+	for (int i = 0; i < neurons.size (); ++i ) {
+		neurons[i]->calculateError (nextLayer.getNeurons (),i);
+	}
+
+}
+
+void Layer::outputLayerError (const int & result) {
+
+	neurons [0]->setError ((float) result);
+
+}
 
 void Layer::setOutput (ProteinData* proteinData)  {
 	neurons [0]->setOutput (proteinData->getData1());
