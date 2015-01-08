@@ -1,5 +1,5 @@
 /**
-    Main project class. Aggregates all network layers, interface and statistics.
+	Main project class. Aggregates all network layers, interface and statistics.
 */
 
 #ifndef NETWORK
@@ -9,35 +9,41 @@
 #include "DataCollector.h"
 #include "OutputManager.h"
 #include "CrossValidator.h"
+#include "Layer.h"
 #include <iostream>
 
 class Network {
 public:
-    Network () {};
-    ~Network () {};
+	Network () {};
+	~Network () {};
 
-    // Constructor with input parameters to be passed to Interface
-    Network (int argc, char* argv[]);
+	// Constructor with input parameters to be passed to Interface
+	Network (int argc, char* argv[]);
 
-    // Main class method. Includes all operations and interfaces.
-    void run ();
+	// Main class method. Includes all operations and interfaces.
+	void run ();
 
 private:
-    // Load data from file (if given)
-    bool acquireData ();
+	// Load data from file (if given)
+	bool acquireData ();
 
-    // Saving results to file (if needed)
-    void saveResults ();
+	// Saving results to file (if needed)
+	void saveResults ();
 
-    // Saving stats to file (if needed)
-    void saveStats ();
+	// Saving stats to file (if needed)
+	void saveStats ();
 
-    // Network modules
-    Interface mInterface;
+	void initializeLayers (const int& inputLayer, const int& hiddenLayer, const int& outputLayer);
+
+	void learn (const std::vector<ProteinData *> data);
+
+	// Network modules
+	Interface mInterface;
 	DataCollector mDataCollector;
-    OutputManager mOutputManager;
-    CrossValidator mCrossValidator;
+	OutputManager mOutputManager;
+	CrossValidator mCrossValidator;
 	
+	std::vector <Layer*> mLayersTable;
 
 };
 

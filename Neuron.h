@@ -3,13 +3,18 @@
 
 #ifndef NEURON
 #define NEURON
+#define BETA 1
 
+#include <math.h>
 #include <vector>
+#include <iostream>
+
 
 class Neuron {
 public:
 	Neuron ();
 	~Neuron ();
+	Neuron (const int& prevLayerSize);
 	
 	/*
 	function randomizes weight of each input information
@@ -42,6 +47,8 @@ public:
 	*/
 	float getOutput ();
 
+	// ONLY FOR INPUT LAYER
+	void setOutput (const float & out);
 
 
 private:

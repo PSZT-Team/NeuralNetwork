@@ -12,7 +12,9 @@ public:
 	Layer ();
 	~Layer ();
 
-	void initializeLayer (const int& size);
+	Layer (const int& size, const int& prevLayerSize);
+
+	void initializeLayer (const int& size, const int& prevLayerSize);
 	
 	void commandToCalculate (const Layer& prevLayer);
 
@@ -22,19 +24,15 @@ public:
 	function sets outputs as data from protein data,
 	and resets wage.
 	*/
-	void setOutput (const ProteinData* & proteinData);
+	void setOutput ( ProteinData* proteinData);
 
 	
-	std::vector<Neuron*> getNeurons ();
+	std::vector<Neuron*> getNeurons () const;
 	int getLayerSize ();
-
-
-
 
 private:
 	std::vector <Neuron*> neurons;
 	int layerSize;
-	Layer* prevLayer;
 };
 
 #endif
