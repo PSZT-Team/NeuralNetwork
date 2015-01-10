@@ -3,11 +3,14 @@
 
 #ifndef NEURON
 #define NEURON
-#define BETA 1
+#define BETA 0.7
+#define ETA 0.04 // 0.01 to 0.6
+#define ALPHA 0 // 0 to 1, >0.5
 
 #include <math.h>
 #include <vector>
 #include <iostream>
+#include <ctime>
 
 
 class Neuron {
@@ -29,7 +32,8 @@ public:
 	each neutron provides input value for this neutron, returning it's output value
 	output value calculation : tgh (sum (weight * input) )
 	*/
-	void calculateOutput (const std::vector<Neuron*> & prevNeuronLayers);
+	void calculateOutput (const std::vector<Neuron*> & prevLayerNeurons);
+
 	
 	/*
 	sets sizes of weights vectors, set sum at 0 and so on
@@ -37,10 +41,9 @@ public:
 	void initializeNeuron (const int & prevLayerSize);
 
 	/*
-	predeclaration. don't know what arguments will be necessary yet.
+	fuction correct every weight.
 	*/
-	void correctWeight ();
-
+	void correctWeight (const std::vector<Neuron*> & prevLayerNeurons);
 
 	void calculateError (const std::vector<Neuron*> & prevNeuronLayers, const int & neuronNumber);
 
@@ -69,6 +72,7 @@ private:
 	
 	float error;
 	float output;
+	float sum;
 	
 
 };

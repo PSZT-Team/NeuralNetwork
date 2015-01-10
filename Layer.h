@@ -20,8 +20,19 @@ public:
 	
 	void calculateErrors (const Layer& nextLayer);
 
+	void correctWeights(const Layer& prevLayer);
+
 	void outputLayerError (const int & output);
 	
+	//temp funtion
+	void printOutput () {
+		std::cout << neurons [0]->getOutput ();
+	}
+
+	float getOutput () {
+		return neurons [0]->getOutput ();
+	}
+
 	/*
 	ONLY FOR INPUT LAYERS
 	TO DO (maybe) - CREATE InputLayer : Layer class

@@ -11,31 +11,56 @@ Neuron::~Neuron () {
 
 Neuron::Neuron (const int& prevLayerSize) {
 	initializeNeuron (prevLayerSize);
+	srand (time (NULL));
 	randomWeight ();
+
+}
+
+
+
+
+void Neuron::initializeNeuron (const int & prevLayerSize) {
+	for (int i = 0; i < prevLayerSize; ++i) {
+		weight.push_back (0.0f);
+		prevWeight.push_back (0.0f);
+	}
 }
 
 void Neuron::randomWeight () {
-	// TO DO!
+
+	for (auto &i : weight) {
+		i = (((rand () % 100000L) / 1700.0) - 9.8)*0.0015;
+		//i = ((rand () % 1000L) / 10000.0);
+		//i = rand () % 1L + 1;
+		if (i == 0.0) i = 0.01492;
+		//i = 0.05;
+	}
+		
 
 }
 
-void Neuron::calculateOutput (const std::vector<Neuron*> & prevNeuronLayers) {
+void Neuron::calculateOutput (const std::vector<Neuron*> & prevLayerNeurons) {
 	output = 0;
-	if (weight.size () != prevNeuronLayers.size ()) {
+	sum = 0;
+	if (weight.size () != prevLayerNeurons.size ()) {
 		//CRITICALL ERROR 
 		std::cout << "CRITICAL ERROR" << std::endl;
 		return;
 	}
 
 	for (int i = 0; i < weight.size (); ++i)  {
-		output += (weight [i] * prevNeuronLayers [i]->getOutput());
+		sum += (weight [i] * prevLayerNeurons [i]->getOutput());
+	
+	
 	}
 
 	// Hyperbolic tangens
-	output = tanh (BETA * output);
+	output = tanh (BETA * sum);
 
 
 }
+
+
 
 void Neuron::calculateError (const std::vector<Neuron*> & nextNeuronLayer, const int& neuronNumber) {
 	error = 0;
@@ -43,22 +68,29 @@ void Neuron::calculateError (const std::vector<Neuron*> & nextNeuronLayer, const
 	for (int i = 0; i < nextNeuronLayer.size (); ++i) {
 
 		// error += f'(x) * error[nextLayerAllNeurons]*weight[nextLayerAllNeurons][thisLayer]
-		error += (BETA * (1 - tanh (BETA*output) * tanh (BETA*output))) * (nextNeuronLayer[i]->getWeight (neuronNumber) * nextNeuronLayer[i]->getError());
+		//error += (BETA * (1 - pow (tanh (BETA*sum), 2.0)) * (nextNeuronLayer[i]->getWeight (neuronNumber) * nextNeuronLayer[i]->getError()));
+		error = nextNeuronLayer [i]->getWeight (neuronNumber) * nextNeuronLayer [i]->getError ();
 	}
 }
 
 
-void Neuron::initializeNeuron (const int & prevLayerSize) {
-	for (int i = 0; i < prevLayerSize; ++i)  {
-		weight.push_back (0.0f);
-		prevWeight.push_back (0.0f);
+void Neuron::correctWeight (const std::vector<Neuron*> & prevLayerNeurons) {
+
+	if (weight.size () != prevLayerNeurons.size ()) {
+		//CRITICALL ERROR 
+		std::cout << "CRITICAL ERROR" << std::endl;
+		return;
+	}
+	
+	for (int i = 0; i < weight.size (); ++i) {
+
+		float w = weight [i];
+		//weight [i] += ETA * error * prevLayerNeurons [i]->getOutput () + ALPHA*(weight [i] - prevWeight [i]);
+		weight [i] += ETA * error * prevLayerNeurons [i]->getOutput () * (BETA * (1 - pow (tanh (BETA*sum), 2.0)));
+		
+		prevWeight [i] = w;
 	}
 
-
-}
-
-void Neuron::correctWeight () {
-	// TO DO! TO DO! TO DO!
 }
 
 
@@ -76,8 +108,7 @@ void Neuron::setOutput (const float & out) {
 }
 
 void Neuron::setError (const float & result) {
-
-	error = result - output;
+	error = (result - output);// *(BETA * (1 - pow (tanh (BETA*output), 2.0)));
 }
 
 float Neuron::getError () {

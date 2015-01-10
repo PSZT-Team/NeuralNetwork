@@ -99,6 +99,8 @@ void DataCollector::getDataFromFile ()
 std::vector<ProteinData*> DataCollector::getLearningData (const int & begin, const int & length){
 	std::vector <ProteinData*> lerningData;
 
+	shuffleData ();
+
 	for (int i = 0; i < data.size (); ++i)
 		if (!(i>=begin && i < (begin+length)))
 			lerningData.push_back (new ProteinData (*data [i]));
@@ -152,8 +154,7 @@ bool DataCollector::loadData () {
 	getDataFromFile ();
 	closeFile ();
 	//showData ();
-	shuffleData ();
-	//	showData ();
+	//showData ();
 
 	return true;
 }

@@ -32,7 +32,14 @@ void Layer::calculateErrors (const Layer& nextLayer) {
 	for (int i = 0; i < neurons.size (); ++i ) {
 		neurons[i]->calculateError (nextLayer.getNeurons (),i);
 	}
+}
 
+void Layer::correctWeights (const Layer & prevLayer) {
+
+	for (auto &i : neurons) {
+		i->correctWeight (prevLayer.getNeurons ());
+
+	}
 }
 
 void Layer::outputLayerError (const int & result) {

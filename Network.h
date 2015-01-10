@@ -35,6 +35,9 @@ private:
 
 	void initializeLayers (const int& inputLayer, const int& hiddenLayer, const int& outputLayer);
 
+	void initializeLayers (std::vector<int> layers);
+
+
 	void learn (const std::vector<ProteinData *> data);
 
 	// Network modules
