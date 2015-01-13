@@ -207,13 +207,14 @@ std::string OutputManager::prepareRow (IterationInfo<Type> * iterationInfo, bool
     }
 
     // Add classifications.
-    unsigned int size = isFormatted ? 5 : 0;
+    unsigned int size = isFormatted ? 7 : 0;
     row += formatWidth<Type> (iterationInfo->mTP, size, ' ', separator);
     row += formatWidth<Type> (iterationInfo->mTN, size, ' ', separator);
     row += formatWidth<Type> (iterationInfo->mFP, size, ' ', separator);
     row += formatWidth<Type> (iterationInfo->mFN, size, ' ', separator);
 
     // Add indicators.
+    size = isFormatted ? 5 : 0;
     row += formatWidth<float> (iterationInfo->mAccuracy, size, '0', separator);
     row += formatWidth<float> (iterationInfo->mSpecificity, size, '0', separator);
     row += formatWidth<float> (iterationInfo->mSensitivity, size, '0', separator);

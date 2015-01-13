@@ -19,7 +19,7 @@ void Network::run () {
 
 
 	// TEMP
-	 mCrossValidator.fillWithRandomData ();
+	mCrossValidator.fillWithRandomData ();
 
 	this->saveResults ();
 	this->saveStats ();
@@ -38,9 +38,6 @@ void Network::run () {
 
 	for (int i = 1; i < 150; i++)
 		learn (mDataCollector.getLearningData (1, 100));
-	//
-	std::cout << std::endl << " lastone: " << std::endl;
-	
 
 	learn (mDataCollector.getLearningData (0, 100));
 
@@ -162,15 +159,15 @@ void Network::learn (const std::vector<ProteinData *> data) {
 
 	}
 	ERMS = sqrt (RMS / (double) (data.size()*2));
-	std::cout << "RESULTS" << std::endl;
 
-	//std::cout << "TP: " << TP << std::endl;
+#ifdef __VERBOSE
+	std::cout << "RESULTS" << std::endl;
+    //std::cout << "TP: " << TP << std::endl;
 	//std::cout << "FP: " << FP << std::endl;
 	//std::cout << "TN: " << TN << std::endl;
 	//std::cout << "FN: " << FN << std::endl;
 	std::cout << "t: " << TP + TN << std::endl;
 	std::cout << "f : " << FN + FP << std::endl;
-
-	std::cout << " \t ERMS : " << ERMS << std::endl;
-
+    std::cout << " \t ERMS : " << ERMS << std::endl;
+#endif
 }
