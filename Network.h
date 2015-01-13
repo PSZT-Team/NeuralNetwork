@@ -10,6 +10,7 @@
 #include "OutputManager.h"
 #include "CrossValidator.h"
 #include "Layer.h"
+#include "XMLParser.h"
 #include <iostream>
 
 class Network {
@@ -45,6 +46,7 @@ private:
 	DataCollector mDataCollector;
 	OutputManager mOutputManager;
 	CrossValidator mCrossValidator;
+    XMLParser mXMLParser;
 	
 	std::vector <Layer*> mLayersTable;
 

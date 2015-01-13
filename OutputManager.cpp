@@ -178,7 +178,7 @@ std::string OutputManager::prepareRow (IterationInfo<Type> * iterationInfo, bool
         if (isFormatted) {
             // Add formatted iterations and records.
             row += formatWidth<unsigned int> (CV_ITERATIONS_NUMBER, 10, ' ', separator);
-            row += formatWidth<unsigned int> ((iterationInfo->mTP + iterationInfo->mTN +
+            row += formatWidth<unsigned int> ((unsigned int)(iterationInfo->mTP + iterationInfo->mTN +
                 iterationInfo->mFP + iterationInfo->mFN) * CV_ITERATIONS_NUMBER,
                 7, ' ', separator);
         }
@@ -187,7 +187,7 @@ std::string OutputManager::prepareRow (IterationInfo<Type> * iterationInfo, bool
             // Add non-formatted date, iterations and records.
             separator = ";";
             row += formatWidth<unsigned int> (CV_ITERATIONS_NUMBER, 0, ' ', separator);
-            row += formatWidth<unsigned int> ((iterationInfo->mTP + iterationInfo->mTN +
+            row += formatWidth<unsigned int> ((unsigned int)(iterationInfo->mTP + iterationInfo->mTN +
                 iterationInfo->mFP + iterationInfo->mFN) * CV_ITERATIONS_NUMBER,
                 0, ' ', separator);
         }
