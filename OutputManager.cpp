@@ -143,26 +143,6 @@ bool OutputManager::saveGlobalStats (IterationInfo<Type> * iterationInfo, const 
     return true;
 }
 
-void OutputManager::replaceKeyword (const std::string keyword, const std::string value, std::string & text) {
-    // If keyword is not found, print an error.
-    unsigned int keywordPos = text.find (keyword);
-    if (keywordPos == std::string::npos) {
-        std::cout << " >> ERROR: Keyword '" + keyword + "' cannot be found!\n" +
-            "           Check  " + HEADERS_FOLDER + "  for  " + TEMPLATE_FILE + ".\n";
-        return;
-    }
-
-    // Otherwise...
-    while (keywordPos != std::string::npos) {
-        std::string before = "", after = "";
-        before = text.substr (0, keywordPos);
-        after = text.substr (keywordPos + keyword.size (), text.size () - (keywordPos + keyword.size ()));
-
-        text = before + value + after;
-        keywordPos = text.find (keyword);
-    }
-}
-
 std::string OutputManager::prepareRow (CrossValidator::DataContainer * dataContainer, const unsigned int iteration,
                                        bool isGlobal, bool isFormatted, bool isAverage) {
     return prepareRow<unsigned int> (&dataContainer->operator[](iteration), isGlobal, isFormatted, isAverage);

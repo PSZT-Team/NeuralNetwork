@@ -12,6 +12,16 @@ void Network::run () {
 	mInterface.printUsage ();
 
     mXMLParser.parseFile ();
+    int iterations = -1;
+    float alpha, beta, eta;
+    mXMLParser.searchForValue<int> (*mXMLParser.getRootTag (), "Network", "Iterations", iterations);
+    mXMLParser.searchForValue<float> (*mXMLParser.getRootTag (), "Network", "Alpha", alpha);
+    mXMLParser.searchForValue<float> (*mXMLParser.getRootTag (), "Network", "Beta", beta);
+    mXMLParser.searchForValue<float> (*mXMLParser.getRootTag (), "Network", "Eta", eta);
+
+    // TEMP
+    std::cout << "\nIterations: " << iterations << "\n";
+    std::cout << "Alpha: " << alpha << ", Beta: " << beta << ", Eta: " << eta << "\n\n";
 
 	if (!this->acquireData ())
 		return;
@@ -93,7 +103,7 @@ void Network::initializeLayers (const int& inputLayer, const int& hiddenLayer, c
 void Network::initializeLayers (std::vector<int> layers) {
 
 	mLayersTable.push_back (new Layer (layers[0], 1));
-	for (int i = 1; i < layers.size (); ++i )
+	for (unsigned int i = 1; i < layers.size (); ++i )
 		mLayersTable.push_back (new Layer (layers[i], layers[i-1]));
 
 }
@@ -116,7 +126,7 @@ void Network::learn (const std::vector<ProteinData *> data) {
 		 
 		mLayersTable [0]->setOutput (dataSet);
 		
-		for (int i = 1; i < mLayersTable.size (); ++i)  {
+		for (unsigned int i = 1; i < mLayersTable.size (); ++i)  {
 			mLayersTable [i]->commandToCalculate (*mLayersTable [i - 1]);
 		}
 
@@ -145,14 +155,14 @@ void Network::learn (const std::vector<ProteinData *> data) {
 		// PART 2 - INSTRUCTOR AND LEARNING
 		mLayersTable [mLayersTable.size () - 1]->outputLayerError (dataSet->getReactionResult());
 
-		for (int i = mLayersTable.size() - 2; i >= 1 ; --i) {
+		for (unsigned int i = mLayersTable.size() - 2; i >= 1 ; --i) {
 			mLayersTable [i]->calculateErrors (*mLayersTable [i + 1]);
 		}
 
 
 		// PART 3 - WEIGHT CORRECTION
 
-		for (int i = 1; i < mLayersTable.size (); ++i) {
+		for (unsigned int i = 1; i < mLayersTable.size (); ++i) {
 			mLayersTable [i]->correctWeights (*mLayersTable [i - 1]);
 		}
 		
@@ -162,7 +172,7 @@ void Network::learn (const std::vector<ProteinData *> data) {
 		
 
 	}
-	ERMS = sqrt (RMS / (double) (data.size()*2));
+	ERMS = (float)sqrt (RMS / (double) (data.size()*2));
 
 #ifdef __PRINT_RESULTS
 	std::cout << "RESULTS" << std::endl;
@@ -184,7 +194,7 @@ void Network::test (CrossValidator::TestResults & results, std::vector<ProteinDa
 
         mLayersTable[0]->setOutput (dataSet);
 
-        for (int i = 1; i < mLayersTable.size (); ++i) {
+        for (unsigned int i = 1; i < mLayersTable.size (); ++i) {
             mLayersTable[i]->commandToCalculate (*mLayersTable[i - 1]);
         }
 

@@ -8,13 +8,13 @@ Layer::Layer () {
 Layer::~Layer () {
 }
 
-Layer::Layer (const int& size, const int& prevLayerSize) : layerSize(size) {
+Layer::Layer (const unsigned int& size, const unsigned int& prevLayerSize) : layerSize(size) {
 	initializeLayer (size, prevLayerSize);
 }
 
-void Layer::initializeLayer (const int & size, const int & prevLayerSize) {
+void Layer::initializeLayer (const unsigned int & size, const unsigned int & prevLayerSize) {
 
-	for (int i = 0; i < size; ++i)  {
+	for (unsigned int i = 0; i < size; ++i)  {
 		neurons.push_back (new Neuron (prevLayerSize));
 	}
 }
@@ -29,7 +29,7 @@ void Layer::commandToCalculate (const Layer& prevLayer) {
 
 void Layer::calculateErrors (const Layer& nextLayer) {
 	
-	for (int i = 0; i < neurons.size (); ++i ) {
+	for (unsigned int i = 0; i < neurons.size (); ++i ) {
 		neurons[i]->calculateError (nextLayer.getNeurons (),i);
 	}
 }

@@ -8,6 +8,9 @@ XMLParser::XMLParser (const std::string filename) : mFilename (filename) {
 }
 
 bool XMLParser::parseFile () {
+    // Set root tag.
+    rootTag.name = ROOT_TAG_NAME;
+
     // Check filename.
     if (isFilenameGiven && mFilename == "") {
         std::cout << " >> ERROR: Requested file parsing on empty filename!\n";
@@ -32,16 +35,24 @@ bool XMLParser::parseFile () {
     Utilities::replaceKeyword ("\n", "", xmlContent);
 
     // Parse content
-    if (parseHeader (xmlContent)) {
+    if (parseHeader (rootTag, xmlContent)) {
         parseTag (xmlContent, rootTag);
     }
     else
         return false;
 
+    // TEMP Print XML Network config.
+    std::cout << "XML config file structure\n--------------------------\n";
+    this->printRecursive (rootTag, 0);
+
     return true;
 }
 
-bool XMLParser::parseHeader (std::string & content) {
+XMLParser::Tag * XMLParser::getRootTag () {
+    return &rootTag;
+}
+
+bool XMLParser::parseHeader (Tag & headerTag, std::string & content) {
     // Find header
     removePreceedingSpaces (content);
     std::string openString = "<?xml", closeString = "?>";
@@ -50,7 +61,6 @@ bool XMLParser::parseHeader (std::string & content) {
     if (openPos != STRING_NOT_FOUND && closePos != STRING_NOT_FOUND) {
 
         // Parse header attributes.
-        Tag headerTag;
         headerTag.name = "xml";
         if (!parseAttributes (content.substr (openPos + openString.size (),
             closePos - openPos - openString.size ()), headerTag)) {
@@ -83,25 +93,26 @@ bool XMLParser::parseHeader (std::string & content) {
 }
 
 bool XMLParser::parseTag (std::string content, Tag & tag) {
+    // Prepare content and variables.
     removePreceedingSpaces (content);
     unsigned int openTagBegin = content.find ("<");
     unsigned int openTagEnd = content.find (">");
-    std::string name = "";
+    unsigned int closeTagPos = 0;
+    std::string name = "", closeTag = "";
     bool isTagEmpty = false;
 
-    // ADD WHILE
+    // Repeat while opening tag found.
+    while (openTagBegin != STRING_NOT_FOUND && openTagEnd != STRING_NOT_FOUND) {
 
-    // Opening tag found.
-    if (openTagBegin != STRING_NOT_FOUND && openTagEnd != STRING_NOT_FOUND) {
-        // Get tag content to acuire name and attributes.
+        // New objects and variables.
         Tag newTag;
         std::string openTagContent = content.substr (openTagBegin + 1, openTagEnd - 1);
         removePreceedingSpaces (openTagContent);
         unsigned int afterNameSpacePos = openTagContent.find (" ");
-        unsigned int backslashPos = openTagContent.find ("\\");
+        unsigned int slashPos = openTagContent.find ("/");
 
         // Check for empty tag.
-        if (backslashPos != STRING_NOT_FOUND) {
+        if (slashPos != STRING_NOT_FOUND) {
             isTagEmpty = true;
         }
 
@@ -110,7 +121,7 @@ bool XMLParser::parseTag (std::string content, Tag & tag) {
             if (!isTagEmpty)
                 name = openTagContent;
             else
-                name = openTagContent.substr (0, backslashPos);
+                name = openTagContent.substr (0, slashPos);
         }
         // Space found => possible attributes.
         else {
@@ -122,17 +133,49 @@ bool XMLParser::parseTag (std::string content, Tag & tag) {
         newTag.name = name;
         newTag.isEmpty = isTagEmpty;
 
-        // Search for close tah if tag is not empty.
+        // Search for close tag.
+        closeTag = "</" + name + ">";
+        closeTagPos = content.find (closeTag);
         if (!isTagEmpty) {
-            unsigned int closeTagPos = content.find ("</" + name + ">");
 
+            // Closing tag found.
+            if (closeTagPos != STRING_NOT_FOUND) {
+
+                // RECURSIVELY CALL THIS METHOD FOR CONTENT BETWEEN TAGS.                
+                parseTag (content.substr (openTagEnd + 1, closeTagPos - openTagEnd - 1), newTag);
+
+                // Erase already parsed content.
+                content = content.substr (closeTagPos + closeTag.size (),
+                                          content.size () - closeTag.size () - closeTagPos);
+            }
+            else {
+                // ERROR close tag should be found
+                return false;
+            }
         }
-       
-        //std::string contentBetweenTags = content.substr (openTagBegin.)
-    }
-    // No opening tag found.
-    else {
+        else {
+            // Erase already parsed content.
+            closeTag = "/>";
+            closeTagPos = content.find (closeTag);
+            content = content.substr (closeTagPos + closeTag.size (),
+                                      content.size () - closeTag.size () - closeTagPos);
+        }
 
+        // Insert new tag.
+        tag.tags.push_back (newTag);
+
+        //Get new positions. Reset parameters.
+        removePreceedingSpaces (content);
+
+        if (content.size () == 0)
+            break;
+
+        openTagBegin = content.find ("<");
+        openTagEnd = content.find (">");
+        closeTagPos = 0;
+        name = "";
+        closeTag = "";
+        isTagEmpty = false;
     }
 
     return true;
@@ -173,6 +216,7 @@ bool XMLParser::parseAttributes (std::string content, Tag & tag) {
 
                     // Erase value and closing quote from content.
                     content = content.substr (quotePos + 1, content.size () - quotePos - 1);
+                    removePreceedingSpaces (content);
                 }
                 else {
                     std::cout << " >> ERROR: Invalid value for attribute '" << name << "'.\n";
@@ -187,6 +231,8 @@ bool XMLParser::parseAttributes (std::string content, Tag & tag) {
         catch (...) {
             std::cout << " >> ERROR: Parsing attribute value for tag '" << tag.name << "' failed!\n";
             return false;
+            // Find new potential attribute.
+            removePreceedingSpaces (content);
         }
 
         // Add new Attribute to Tag.
@@ -195,8 +241,6 @@ bool XMLParser::parseAttributes (std::string content, Tag & tag) {
         attribute.value = value;
         tag.attributes.push_back (attribute);
 
-        // Find new potential attribute.
-        removePreceedingSpaces (content);
         equalsPos = content.find ("=");
     }
 
@@ -213,4 +257,29 @@ void XMLParser::removePreceedingSpaces (std::string & content) {
             break;
         }
     }
+}
+
+void XMLParser::printRecursive (Tag & tag, const unsigned int indent) {
+    // Print open tag.
+    std::cout << std::setw (indent) << "" << "<" << tag.name;
+
+    // Print attributes.
+    for (Attribute & attr : tag.attributes) {
+        std::cout << " " << attr.name << "=\"" << attr.value << "\"";
+    }
+
+    // Close open tag.
+    if (tag.isEmpty)
+        std::cout << " />\n";
+    else
+        std::cout << ">\n";
+
+    // Print nested tags if exist.
+    for (Tag & tag : tag.tags) {
+        printRecursive (tag, indent + 2);
+    }
+
+    // Print closing tag.
+    if (!tag.isEmpty)
+        std::cout << std::setw (indent) << "" << "</" << tag.name << ">\n";
 }

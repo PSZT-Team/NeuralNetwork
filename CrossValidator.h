@@ -1,5 +1,5 @@
 /**
-    Manages cross validation procedure, holds all necessary validation 
+    Manages cross validation procedure, holds all necessary validation
     indicators and results. Generates stats to be saved.
 */
 
@@ -28,8 +28,10 @@ public:
     // \param int : Number of all iterations.
     typedef std::array <IterationInfo<unsigned int>, CV_ITERATIONS_NUMBER> DataContainer;
 
-    CrossValidator () {};
-    ~CrossValidator () {};
+    CrossValidator () {
+    };
+    ~CrossValidator () {
+    };
 
     // Constructor with additional parameters.
     // \param unsigned int : Number of all records.
@@ -85,22 +87,6 @@ private:
     // Number of all records
     unsigned int mCapacity;
 
-    // TEMP
-    // Output stream operator
-    //friend std::ostream & operator<< (std::ostream & out, CrossValidator & cv) {
-    //    out << "Iterations number: " << CV_ITERATIONS_NUMBER << "\n";
-
-    //    // Return formatted data from all iterations
-    //    for (unsigned int i = 0; i < CV_ITERATIONS_NUMBER; ++i) {
-    //        IterationInfo iteration = cv.mData[i];
-
-    //        out << std::setw (4) << iteration.mTP << "\n";
-    //    }
-
-    //    return out;
-    //}
-
-    
     // TEMP
     // Generates random pair with positive or negative values.
     std::pair <bool, bool> generatePair () {

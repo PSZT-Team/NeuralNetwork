@@ -1,5 +1,8 @@
 #include "Neuron.h"
 
+float Neuron::ALPHA = DEFAULT_ALPHA;
+float Neuron::BETA = DEFAULT_BETA;
+float Neuron::ETA = DEFAULT_ETA;
 
 Neuron::Neuron () {
 
@@ -11,7 +14,7 @@ Neuron::~Neuron () {
 
 Neuron::Neuron (const int& prevLayerSize) {
 	initializeNeuron (prevLayerSize);
-	srand (time (NULL));
+	srand ((unsigned)time (NULL));
 	randomWeight ();
 
 }
@@ -29,10 +32,10 @@ void Neuron::initializeNeuron (const int & prevLayerSize) {
 void Neuron::randomWeight () {
 
 	for (auto &i : weight) {
-		i = (((rand () % 100000L) / 1700.0) - 9.8)*0.0015;
+		i = (((rand () % 100000L) / 1700.f) - 9.8f)*0.0015f;
 		//i = ((rand () % 1000L) / 10000.0);
 		//i = rand () % 1L + 1;
-		if (i == 0.0) i = 0.01492;
+		if (i == 0.f) i = 0.01492f;
 		//i = 0.05;
 	}
 		
@@ -48,14 +51,14 @@ void Neuron::calculateOutput (const std::vector<Neuron*> & prevLayerNeurons) {
 		return;
 	}
 
-	for (int i = 0; i < weight.size (); ++i)  {
+	for (unsigned int i = 0; i < weight.size (); ++i)  {
 		sum += (weight [i] * prevLayerNeurons [i]->getOutput());
 	
 	
 	}
 
 	// Hyperbolic tangens
-	output = tanh (BETA * sum);
+	output = (float)tanh (BETA * sum);
 
 
 }
@@ -65,7 +68,7 @@ void Neuron::calculateOutput (const std::vector<Neuron*> & prevLayerNeurons) {
 void Neuron::calculateError (const std::vector<Neuron*> & nextNeuronLayer, const int& neuronNumber) {
 	error = 0;
 
-	for (int i = 0; i < nextNeuronLayer.size (); ++i) {
+	for (unsigned int i = 0; i < nextNeuronLayer.size (); ++i) {
 
 		// error += f'(x) * error[nextLayerAllNeurons]*weight[nextLayerAllNeurons][thisLayer]
 		//error += (BETA * (1 - pow (tanh (BETA*sum), 2.0)) * (nextNeuronLayer[i]->getWeight (neuronNumber) * nextNeuronLayer[i]->getError()));
@@ -82,11 +85,11 @@ void Neuron::correctWeight (const std::vector<Neuron*> & prevLayerNeurons) {
 		return;
 	}
 	
-	for (int i = 0; i < weight.size (); ++i) {
+	for (unsigned int i = 0; i < weight.size (); ++i) {
 
 		float w = weight [i];
 		//weight [i] += ETA * error * prevLayerNeurons [i]->getOutput () + ALPHA*(weight [i] - prevWeight [i]);
-		weight [i] += ETA * error * prevLayerNeurons [i]->getOutput () * (BETA * (1 - pow (tanh (BETA*sum), 2.0)));
+		weight [i] += ETA * error * prevLayerNeurons [i]->getOutput () * (BETA * (1 - (float)pow (tanh (BETA*sum), 2.0)));
 		
 		prevWeight [i] = w;
 	}
@@ -105,6 +108,12 @@ float Neuron::getOutput () {
 
 void Neuron::setOutput (const float & out) {
 	output = out;
+}
+
+void Neuron::setParameters (const float alpha, const float beta, const float eta) {
+    ALPHA = alpha;
+    BETA = beta;
+    ETA = eta;
 }
 
 void Neuron::setError (const float & result) {

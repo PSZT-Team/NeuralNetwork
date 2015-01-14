@@ -3,9 +3,10 @@
 
 #ifndef NEURON
 #define NEURON
-#define BETA 0.7
-#define ETA 0.04 // 0.01 to 0.6
-#define ALPHA 0 // 0 to 1, >0.5
+
+#define DEFAULT_ALPHA 0.f  // 0 to 1, >0.5
+#define DEFAULT_BETA 0.7f
+#define DEFAULT_ETA 0.04f  // 0.01 to 0.65
 
 #include <math.h>
 #include <vector>
@@ -15,6 +16,11 @@
 
 class Neuron {
 public:
+    // Network learning parameters.
+    static float ALPHA;
+    static float BETA;
+    static float ETA;
+
 	Neuron ();
 	~Neuron ();
 	Neuron (const int& prevLayerSize);
@@ -63,8 +69,8 @@ public:
 	// ONLY FOR INPUT LAYER
 	void setOutput (const float & out);
 
-
-
+    // Set learning parameters values.
+    void setParameters (const float alpha, const float beta, const float eta);
 
 private:
 	std::vector <float> weight;

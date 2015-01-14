@@ -12,9 +12,9 @@ public:
 	Layer ();
 	~Layer ();
 
-	Layer (const int& size, const int& prevLayerSize);
+	Layer (const unsigned int& size, const unsigned int& prevLayerSize);
 
-	void initializeLayer (const int& size, const int& prevLayerSize);
+	void initializeLayer (const unsigned int& size, const unsigned int& prevLayerSize);
 	
 	void commandToCalculate (const Layer& prevLayer);
 	

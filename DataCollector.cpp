@@ -51,7 +51,7 @@ void DataCollector::getDataFromFile ()
 			std::string s2;
 			ss.get (sign);
 			if (!getline (ss, s2, 'e')) break;
-			number = atof (s2.c_str ());
+			number = (float)atof (s2.c_str ());
 			if (sign == '-')
 				number *= (-1);
 
@@ -60,7 +60,7 @@ void DataCollector::getDataFromFile ()
 
 			if (!getline (ss, s2, ' ')) break;
 
-			index = atof (s2.c_str ());
+			index = (float)atof (s2.c_str ());
 			while (index > 0) {
 				--index;
 
@@ -81,7 +81,7 @@ void DataCollector::getDataFromFile ()
 					tempData->setData3 (number);
 					break;
 				case 3:
-					tempData->setReactionResult (number);
+					tempData->setReactionResult ((int)number);
 					break;
 				default:
 					break;
@@ -96,21 +96,21 @@ void DataCollector::getDataFromFile ()
 }
 
 
-std::vector<ProteinData*> DataCollector::getLearningData (const int & begin, const int & length){
+std::vector<ProteinData*> DataCollector::getLearningData (const unsigned int & begin, const unsigned int & length){
 	std::vector <ProteinData*> lerningData;
 
 	shuffleData ();
 
-	for (int i = 0; i < data.size (); ++i)
+	for (unsigned int i = 0; i < data.size (); ++i)
 		if (!(i>=begin && i < (begin+length)))
 			lerningData.push_back (new ProteinData (*data [i]));
 	return lerningData;
 }
 
-std::vector<ProteinData*> DataCollector::getCheckData (const int & begin, const int & length) {
+std::vector<ProteinData*> DataCollector::getCheckData (const unsigned int & begin, const unsigned int & length) {
 	std::vector <ProteinData*> checkData;
 	
-	int last = begin + length;
+	unsigned int last = begin + length;
 	if (last > data.size ())
 		last = data.size ();
 
@@ -120,7 +120,7 @@ std::vector<ProteinData*> DataCollector::getCheckData (const int & begin, const 
 	return checkData;
 }
 
-std::vector <ProteinData*> DataCollector::getTestData (const int & begin, const int & length) {
+std::vector <ProteinData*> DataCollector::getTestData (const unsigned int & begin, const unsigned int & length) {
 	std::vector <ProteinData*> testData = getCheckData (begin, length);
 
 	for (auto &i : testData) {
