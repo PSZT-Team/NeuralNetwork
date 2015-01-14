@@ -19,6 +19,9 @@ void Network::run () {
     mXMLParser.searchForValue<float> (*mXMLParser.getRootTag (), "Network", "Beta", beta);
     mXMLParser.searchForValue<float> (*mXMLParser.getRootTag (), "Network", "Eta", eta);
 
+    mCrossValidator.setIterationsNumber (iterations);
+    Neuron::setParameters (alpha, beta, eta);
+
     // TEMP
     std::cout << "\nIterations: " << iterations << "\n";
     std::cout << "Alpha: " << alpha << ", Beta: " << beta << ", Eta: " << eta << "\n\n";
@@ -38,12 +41,9 @@ void Network::run () {
 	lay.push_back (1);
 	
 	initializeLayers (lay);
-	
 
-	//for (int i = 1; i < 150; i++)
-    //learn (mDataCollector.getLearningData (1, 100));
-
-    for (unsigned int i = 0; i < CV_ITERATIONS_NUMBER; ++i) {
+    // Learning and testing iterations.
+    for (unsigned int i = 0; i < CrossValidator::CV_ITERATIONS_NUMBER; ++i) {
         learn (mDataCollector.getLearningData (mCrossValidator.getIterationStartRecordPosition (),
             mCrossValidator.getTestSetSize ()));
         CrossValidator::TestResults testResults;
@@ -51,7 +51,6 @@ void Network::run () {
             mCrossValidator.getTestSetSize ()));
         mCrossValidator.addIterationInfo (testResults);        
     }
-	//learn (mDataCollector.getLearningData (0, 100));
 
     this->saveResults ();
     this->saveStats ();

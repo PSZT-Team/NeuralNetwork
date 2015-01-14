@@ -3,10 +3,10 @@
     indicators and results. Generates stats to be saved.
 */
 
-#ifndef CROSS_VALIDATION
-#define CROSS_VALIDATION
+#ifndef CROSS_VALIDATOR
+#define CROSS_VALIDATOR
 
-#define CV_ITERATIONS_NUMBER 10
+#define CV_ITERATIONS_NUMBER_DEFAULT 10
 #define CV_GLOBAL_FILE "cv_global.txt"
 #define CV_GLOBAL_FORMATTED_FILE "cv_global_formatted.txt"
 
@@ -18,6 +18,9 @@
 
 class CrossValidator {
 public:
+    // Iterations for Network to learn and test results.
+    static unsigned int CV_ITERATIONS_NUMBER;
+
     // Container for comparing results to expected values.
     // \param bool : Expected value.
     // \param bool : Actual result.
@@ -26,7 +29,7 @@ public:
     // Container for all iterations results.
     // \param IterationInfo : Results of one iteration.
     // \param int : Number of all iterations.
-    typedef std::array <IterationInfo<unsigned int>, CV_ITERATIONS_NUMBER> DataContainer;
+    typedef std::vector <IterationInfo<unsigned int> > DataContainer;
 
     CrossValidator () {
     };
@@ -61,8 +64,8 @@ public:
 
     /// Setters
 
-    // Set new capacity value.
-    void setCapacity (const unsigned int capacity);
+    void setCapacity (const unsigned int capacity); // Set new capacity value.
+    void setIterationsNumber (const unsigned int iterationsNumber); // Set number of learning and testing iterations.
 
     // TEMP
     // Fills mData with random test values

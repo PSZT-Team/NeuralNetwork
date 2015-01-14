@@ -77,11 +77,11 @@ bool OutputManager::saveStats (CrossValidator * crossValidator, bool defaultPath
 
     // Prepare headers
     Utilities::replaceKeyword ("$date", currentDateTime, templateContent);
-    Utilities::replaceKeyword ("$iterations", std::to_string (CV_ITERATIONS_NUMBER), templateContent);
-    Utilities::replaceKeyword ("$records", std::to_string (crossValidator->getTestSetSize () * CV_ITERATIONS_NUMBER), templateContent);
+    Utilities::replaceKeyword ("$iterations", std::to_string (CrossValidator::CV_ITERATIONS_NUMBER), templateContent);
+    Utilities::replaceKeyword ("$records", std::to_string (crossValidator->getTestSetSize () * CrossValidator::CV_ITERATIONS_NUMBER), templateContent);
 
     // Prepare data for non-global stats.
-    for (unsigned int iteration = 0; iteration < CV_ITERATIONS_NUMBER; ++iteration) {
+    for (unsigned int iteration = 0; iteration < CrossValidator::CV_ITERATIONS_NUMBER; ++iteration) {
         std::string row = prepareRow (crossValidator->getDataContainer (), iteration, false, true);
         data += row;
     }
@@ -160,18 +160,18 @@ std::string OutputManager::prepareRow (IterationInfo<Type> * iterationInfo, bool
         // Formatted.
         if (isFormatted) {
             // Add formatted iterations and records.
-            row += formatWidth<unsigned int> (CV_ITERATIONS_NUMBER, 10, ' ', separator);
+            row += formatWidth<unsigned int> (CrossValidator::CV_ITERATIONS_NUMBER, 10, ' ', separator);
             row += formatWidth<unsigned int> ((unsigned int)(iterationInfo->mTP + iterationInfo->mTN +
-                iterationInfo->mFP + iterationInfo->mFN) * CV_ITERATIONS_NUMBER,
+                iterationInfo->mFP + iterationInfo->mFN) * CrossValidator::CV_ITERATIONS_NUMBER,
                 7, ' ', separator);
         }
         // Non-formatted.
         else {
             // Add non-formatted date, iterations and records.
             separator = ";";
-            row += formatWidth<unsigned int> (CV_ITERATIONS_NUMBER, 0, ' ', separator);
+            row += formatWidth<unsigned int> (CrossValidator::CV_ITERATIONS_NUMBER, 0, ' ', separator);
             row += formatWidth<unsigned int> ((unsigned int)(iterationInfo->mTP + iterationInfo->mTN +
-                iterationInfo->mFP + iterationInfo->mFN) * CV_ITERATIONS_NUMBER,
+                iterationInfo->mFP + iterationInfo->mFN) * CrossValidator::CV_ITERATIONS_NUMBER,
                 0, ' ', separator);
         }
     }

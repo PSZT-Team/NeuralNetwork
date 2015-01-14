@@ -1,5 +1,7 @@
 #include "CrossValidator.h"
 
+unsigned int CrossValidator::CV_ITERATIONS_NUMBER = CV_ITERATIONS_NUMBER_DEFAULT;
+
 CrossValidator::CrossValidator (unsigned int capacity)
     : mCapacity (capacity) {
 }
@@ -7,7 +9,7 @@ CrossValidator::CrossValidator (unsigned int capacity)
 void CrossValidator::addIterationInfo (IterationInfo<unsigned int> & iterationInfo) {
     // Insert only if limit is not crossed
     if (mIterationCount < CV_ITERATIONS_NUMBER) {
-        mData[mIterationCount] = iterationInfo;
+        mData.push_back (iterationInfo);
         ++mIterationCount;
     }
 }
@@ -80,7 +82,7 @@ IterationInfo<float> CrossValidator::getAverageIterationInfo () {
     for (unsigned int iteration = 0; iteration < CV_ITERATIONS_NUMBER; ++iteration) {
         averageII += mData[iteration];
     }
-    averageII /= CV_ITERATIONS_NUMBER;
+    averageII /= (float)CV_ITERATIONS_NUMBER;
 
     return averageII;
 }
@@ -94,4 +96,8 @@ void CrossValidator::setCapacity (const unsigned int capacity) {
         std::cout << "             To achieve equinumerous test sets, some records will be ignored.\n";
     }
 #endif
+}
+
+void CrossValidator::setIterationsNumber (const unsigned int iterationsNumber) {
+    CV_ITERATIONS_NUMBER = iterationsNumber;
 }

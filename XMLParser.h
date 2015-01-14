@@ -11,8 +11,8 @@
     - Spaces in closing tags.
 */
 
-#ifndef XMLPARSER
-#define XMLPARSER
+#ifndef XML_PARSER
+#define XML_PARSER
 
 #define STRING_NOT_FOUND std::string::npos
 #define DEFAULT_CONFIG_FILE "./Data/network.config"

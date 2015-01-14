@@ -21,6 +21,9 @@ public:
     static float BETA;
     static float ETA;
 
+    // Set learning parameters values.
+    static void setParameters (const float alpha, const float beta, const float eta);
+
 	Neuron ();
 	~Neuron ();
 	Neuron (const int& prevLayerSize);
@@ -68,9 +71,6 @@ public:
 
 	// ONLY FOR INPUT LAYER
 	void setOutput (const float & out);
-
-    // Set learning parameters values.
-    void setParameters (const float alpha, const float beta, const float eta);
 
 private:
 	std::vector <float> weight;
