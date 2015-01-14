@@ -76,9 +76,9 @@ bool OutputManager::saveStats (CrossValidator * crossValidator, bool defaultPath
     templateContent = ss.str ();
 
     // Prepare headers
-    replaceKeyword ("$date", currentDateTime, templateContent);
-    replaceKeyword ("$iterations", std::to_string (CV_ITERATIONS_NUMBER), templateContent);
-    replaceKeyword ("$records", std::to_string (crossValidator->getTestSetSize () * CV_ITERATIONS_NUMBER), templateContent);
+    Utilities::replaceKeyword ("$date", currentDateTime, templateContent);
+    Utilities::replaceKeyword ("$iterations", std::to_string (CV_ITERATIONS_NUMBER), templateContent);
+    Utilities::replaceKeyword ("$records", std::to_string (crossValidator->getTestSetSize () * CV_ITERATIONS_NUMBER), templateContent);
 
     // Prepare data for non-global stats.
     for (unsigned int iteration = 0; iteration < CV_ITERATIONS_NUMBER; ++iteration) {
@@ -88,8 +88,8 @@ bool OutputManager::saveStats (CrossValidator * crossValidator, bool defaultPath
 
     // Insert data and average.
     IterationInfo<float> averageII = crossValidator->getAverageIterationInfo ();
-    replaceKeyword ("$rows", data, templateContent);
-    replaceKeyword ("$average", prepareRow (&averageII, false, true, true), templateContent);
+    Utilities::replaceKeyword ("$rows", data, templateContent);
+    Utilities::replaceKeyword ("$average", prepareRow (&averageII, false, true, true), templateContent);
 
     // Save stats.
     output << templateContent;
@@ -153,11 +153,14 @@ void OutputManager::replaceKeyword (const std::string keyword, const std::string
     }
 
     // Otherwise...
-    std::string before = "", after = "";
-    before = text.substr (0, keywordPos);
-    after = text.substr (keywordPos + keyword.size (), text.size () - (keywordPos + keyword.size ()));
+    while (keywordPos != std::string::npos) {
+        std::string before = "", after = "";
+        before = text.substr (0, keywordPos);
+        after = text.substr (keywordPos + keyword.size (), text.size () - (keywordPos + keyword.size ()));
 
-    text = before + value + after;
+        text = before + value + after;
+        keywordPos = text.find (keyword);
+    }
 }
 
 std::string OutputManager::prepareRow (CrossValidator::DataContainer * dataContainer, const unsigned int iteration,

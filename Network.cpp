@@ -23,7 +23,8 @@ void Network::run () {
 	std::vector<int> lay;
 
 	lay.push_back (3);
-	lay.push_back (4);
+	lay.push_back (5);
+    lay.push_back (3);
 	lay.push_back (1);
 	
 	initializeLayers (lay);

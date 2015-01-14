@@ -1,6 +1,11 @@
 /**
     XML file parser. Stores content of xml file in tree-like form.
     All names and values are of type std::string.
+    
+    Notice:
+    - '<', '/' and '>' characters can be only used within tag declaration.
+    - XML comments are not supported.
+    - Nested tags with the same name are not supported.
 */
 
 #ifndef XMLPARSER
@@ -8,11 +13,13 @@
 
 #define STRING_NOT_FOUND std::string::npos
 #define DEFAULT_CONFIG_FILE "./Data/network.config"
+
 #include <string>
 #include <vector>
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "Utilities.h"
 
 class XMLParser {public:
     // Default constructor with DEFAULT_CONFIG_FILE path.
@@ -52,13 +59,13 @@ class XMLParser {public:
 private:
     /// Operations on tags and attributes.
 
-    void parseHeader (std::string content);        // Parse special <? ... ?> tag (no need to have though).
-    bool parseTag (std::string content);           // Parse tag. Recursively called for nested tags.
+    bool parseHeader (std::string & content);        // Parse special <? ... ?> tag (no need to have though).
+    bool parseTag (std::string content, Tag & tag);           // Parse tag. Recursively called for nested tags.
     bool parseAttributes (std::string content, Tag & tag);    // Parse tag attributes.
     void removePreceedingSpaces (std::string & content);    // Remove spaces that preceed tag or attribute (content in general).
 
-    // Contains root tags.
-    std::vector <Tag> vecRootTags;
+    // Root "tag".
+    Tag rootTag;
 
     // Name of the file to be parsed.
     std::string mFilename = "";

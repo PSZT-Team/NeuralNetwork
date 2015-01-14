@@ -14,6 +14,7 @@
 #include <string>
 #include "DataCollector.h"
 #include "CrossValidator.h"
+#include "Utilities.h"
 
 class OutputManager {
 public:
@@ -24,7 +25,7 @@ public:
     OutputManager() {};
     ~OutputManager() {};
 
-	// Collects all data and saves results
+	// Collects all data and saves results 
 	bool saveResults (DataCollector * dataCollector, bool defaultPath = true);
 
     // Collects stats and saves them
@@ -40,12 +41,6 @@ private:
     // Saves global stats into special file.
     template <typename Type>
     bool saveGlobalStats (IterationInfo<Type> * iterationInfo, const std::string currentDatetime);
-
-    // Replace file keyword with proper data
-    // \param string keyword : Keyword in file to be found and replaced.
-    // \param string value : String to be inserted instead of the given keyword.
-    // \param string & text : Reference to text, in which the replacement is done.
-    void replaceKeyword (const std::string keyword, const std::string value, std::string & text);
 
     // Returns row of data provided from cross validator in a text form.
     // \param DataContainer * : Pointer to dataset.

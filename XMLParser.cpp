@@ -26,17 +26,24 @@ bool XMLParser::parseFile () {
     std::string xmlContent = "";
     std::stringstream ss;
 
-    // Copy file content into std::string.
+    // Copy file content into std::string. Remove new lines.
     ss << xmlFile.rdbuf ();
     xmlContent = ss.str ();
+    Utilities::replaceKeyword ("\n", "", xmlContent);
 
-    parseHeader (xmlContent);
+    // Parse content
+    if (parseHeader (xmlContent)) {
+        parseTag (xmlContent, rootTag);
+    }
+    else
+        return false;
 
     return true;
 }
 
-void XMLParser::parseHeader (std::string content) {
+bool XMLParser::parseHeader (std::string & content) {
     // Find header
+    removePreceedingSpaces (content);
     std::string openString = "<?xml", closeString = "?>";
     unsigned int openPos = content.find (openString);
     unsigned int closePos = content.find (closeString);
@@ -50,6 +57,7 @@ void XMLParser::parseHeader (std::string content) {
 #ifdef __VERBOSE
             std::cout << " >> WARNING: XML header's attributes are incorrect!\n";
 #endif
+            return false;
         }
 #ifdef __VERBOSE
         else {
@@ -60,15 +68,72 @@ void XMLParser::parseHeader (std::string content) {
             std::cout << "\n\n";
         }
 #endif
+        // Erase header from content
+        content = content.substr (closePos + closeString.size (),
+                                  content.size () - closePos - closeString.size ());
     }
     else {
 #ifdef __VERBOSE
         std::cout << " >> WARNING: XML config file has incorrect header!\n";
 #endif
+        return false;
     }
+
+    return true;
 }
 
-bool XMLParser::parseTag (std::string content) {
+bool XMLParser::parseTag (std::string content, Tag & tag) {
+    removePreceedingSpaces (content);
+    unsigned int openTagBegin = content.find ("<");
+    unsigned int openTagEnd = content.find (">");
+    std::string name = "";
+    bool isTagEmpty = false;
+
+    // ADD WHILE
+
+    // Opening tag found.
+    if (openTagBegin != STRING_NOT_FOUND && openTagEnd != STRING_NOT_FOUND) {
+        // Get tag content to acuire name and attributes.
+        Tag newTag;
+        std::string openTagContent = content.substr (openTagBegin + 1, openTagEnd - 1);
+        removePreceedingSpaces (openTagContent);
+        unsigned int afterNameSpacePos = openTagContent.find (" ");
+        unsigned int backslashPos = openTagContent.find ("\\");
+
+        // Check for empty tag.
+        if (backslashPos != STRING_NOT_FOUND) {
+            isTagEmpty = true;
+        }
+
+        // No space found => tag with no attributes.
+        if (afterNameSpacePos == STRING_NOT_FOUND) {
+            if (!isTagEmpty)
+                name = openTagContent;
+            else
+                name = openTagContent.substr (0, backslashPos);
+        }
+        // Space found => possible attributes.
+        else {
+            name = openTagContent.substr (0, afterNameSpacePos);
+            parseAttributes (openTagContent.substr (afterNameSpacePos, openTagContent.size () - afterNameSpacePos), newTag);
+        }
+
+        // Set tag parameters.
+        newTag.name = name;
+        newTag.isEmpty = isTagEmpty;
+
+        // Search for close tah if tag is not empty.
+        if (!isTagEmpty) {
+            unsigned int closeTagPos = content.find ("</" + name + ">");
+
+        }
+       
+        //std::string contentBetweenTags = content.substr (openTagBegin.)
+    }
+    // No opening tag found.
+    else {
+
+    }
 
     return true;
 }
