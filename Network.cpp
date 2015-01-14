@@ -13,17 +13,7 @@ void Network::run () {
 	if (!this->acquireData ())
 		return;
 
-	mCrossValidator.setCapacity (mDataCollector.getDataCount ());
-	
-	//testing lerning process
-
-
-	// TEMP
-	mCrossValidator.fillWithRandomData ();
-
-	this->saveResults ();
-	this->saveStats ();
-
+    mCrossValidator.setCapacity (mDataCollector.getDataCount ());
 
 	//initializeLayers (3, 8, 1);
 	
@@ -36,11 +26,21 @@ void Network::run () {
 	initializeLayers (lay);
 	
 
-	for (int i = 1; i < 150; i++)
-		learn (mDataCollector.getLearningData (1, 100));
+	//for (int i = 1; i < 150; i++)
+    //learn (mDataCollector.getLearningData (1, 100));
 
-	learn (mDataCollector.getLearningData (0, 100));
+    for (unsigned int i = 0; i < CV_ITERATIONS_NUMBER; ++i) {
+        learn (mDataCollector.getLearningData (mCrossValidator.getIterationStartRecordPosition (),
+            mCrossValidator.getTestSetSize ()));
+        CrossValidator::TestResults testResults;
+        test (testResults, mDataCollector.getCheckData (mCrossValidator.getIterationStartRecordPosition (),
+            mCrossValidator.getTestSetSize ()));
+        mCrossValidator.addIterationInfo (testResults);        
+    }
+	//learn (mDataCollector.getLearningData (0, 100));
 
+    this->saveResults ();
+    this->saveStats ();
 }
 
 bool Network::acquireData () {
@@ -170,4 +170,41 @@ void Network::learn (const std::vector<ProteinData *> data) {
 	std::cout << "f : " << FN + FP << std::endl;
     std::cout << " \t ERMS : " << ERMS << std::endl;
 #endif
+}
+
+void Network::test (CrossValidator::TestResults & results, std::vector<ProteinData*> data) {
+    // PART 1 - CALCULATING OUTPUT
+
+    for (auto & dataSet : data) {
+
+
+        mLayersTable[0]->setOutput (dataSet);
+
+        for (int i = 1; i < mLayersTable.size (); ++i) {
+            mLayersTable[i]->commandToCalculate (*mLayersTable[i - 1]);
+        }
+
+        //mLayersTable [2]->printOutput ()<< std::endl;
+
+
+      
+            float a = mLayersTable[mLayersTable.size() - 1]->getOutput ();
+
+            if (a > 0) {
+                if (dataSet->getReactionResult () > 0)
+                    results.push_back (std::make_pair (true, true));
+                else
+                    results.push_back (std::make_pair (true, false));
+            }
+            else {
+                if (dataSet->getReactionResult () < 0)
+                    results.push_back (std::make_pair (false, false));
+                else
+                    results.push_back (std::make_pair (false, true));
+            }
+
+
+        
+
+    }
 }

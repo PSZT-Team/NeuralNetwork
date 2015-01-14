@@ -39,6 +39,7 @@ private:
 
 
 	void learn (const std::vector<ProteinData *> data);
+    void test (CrossValidator::TestResults & results, std::vector<ProteinData*> data);
 
 	// Network modules
 	Interface mInterface;
