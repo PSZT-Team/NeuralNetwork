@@ -1,6 +1,7 @@
 #include "Network.h"
 
-Network::Network (int argc, char* argv[]) : mInterface (argc, argv) {
+Network::Network (int argc, char* argv[]) 
+    : mInterface (argc, argv){
 	
 }
 
@@ -9,6 +10,8 @@ void Network::run () {
 	mInterface.printParams();
 	mInterface.printHelp ();
 	mInterface.printUsage ();
+
+    mXMLParser.parseFile ();
 
 	if (!this->acquireData ())
 		return;
@@ -160,7 +163,7 @@ void Network::learn (const std::vector<ProteinData *> data) {
 	}
 	ERMS = sqrt (RMS / (double) (data.size()*2));
 
-#ifdef __VERBOSE
+#ifdef __PRINT_RESULTS
 	std::cout << "RESULTS" << std::endl;
     //std::cout << "TP: " << TP << std::endl;
 	//std::cout << "FP: " << FP << std::endl;
