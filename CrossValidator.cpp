@@ -51,15 +51,34 @@ void CrossValidator::addIterationInfo (TestResults & testResults) {
                 ++II.mFN;
         }
 
-        // Calculate indicators
-        II.mAccuracy = (II.mTP + II.mTN) / (float)(II.mTP + II.mTN + II.mFN + II.mFP);
+        // Calculate indicators with 'division by zero' check.
+        // Accuracy:
+        float denom = float(II.mTP + II.mTN + II.mFN + II.mFP);
+        denom != 0.f ? II.mAccuracy = (II.mTP + II.mTN) / denom : II.mAccuracy = 0.f;
+
+        // Specificity:
+        denom = (float)(II.mTN + II.mFP);
+        denom != 0.f ? II.mSpecificity = (II.mTN) / denom : II.mSpecificity = 0.f;
+
+        // Sensitivity:
+        denom = (float)(II.mTP + II.mFN);
+        II.mSensitivity = (II.mTP) / denom;
+        
+        // AUC:
+        denom = (float)(II.mFP + II.mTP);
+        denom != 0.f ? II.mAUC = (1.f + II.mSensitivity - (II.mFP / denom)) / 2.f : II.mAUC = 0.f;
+        
+        // F1 score:
+        denom = (float)((II.mTP + II.mFN) + (II.mTP + II.mFP));
+        denom != 0.f ? II.mF1 = 2.f * II.mTP / denom : II.mF1 = 0.f;
+        
+        // MCC:
+        denom = (float)sqrt ((II.mTP + II.mFN) * (II.mTP + II.mFP) * (II.mTN + II.mFN) * (II.mTN + II.mFP));
+        denom != 0.f ? II.mMCC = ((float)II.mTP * II.mTN - (float)II.mFP * II.mFN) / denom : II.mMCC = 0.f;
+
+        // Error rate and Geometrical mean:
         II.mErrorRate = 1.f - II.mAccuracy;
-        II.mSpecificity = (II.mTN) / (float)(II.mTN + II.mFP);
-        II.mSensitivity = (II.mTP) / (float)(II.mTP + II.mFN);
         II.mGMean = sqrt (II.mSensitivity * II.mSpecificity);
-        II.mAUC = (1.f + II.mSensitivity - (II.mFP / (II.mFP + II.mTP))) / 2.f;
-        II.mF1 = 2.f * II.mTP / ((II.mTP + II.mFN) + (II.mTP + II.mFP));
-        II.mMCC = ((float)II.mTP * II.mTN - (float)II.mFP * II.mFN) / (float)sqrt ((II.mTP + II.mFN) * (II.mTP + II.mFP) * (II.mTN + II.mFN) * (II.mTN + II.mFP));
 
         // New iteration is ready to be inserted.
         addIterationInfo (II);

@@ -1,9 +1,6 @@
 /**
     Manages cross validation procedure, holds all necessary validation
     indicators and results. Generates stats to be saved.
-
-    TODO
-    - 'Division by zero' check when calculating indicators.
 */
 
 #ifndef CROSS_VALIDATOR
