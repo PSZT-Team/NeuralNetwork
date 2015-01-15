@@ -30,6 +30,7 @@ public:
 
 	// Getters
 	std::string getStringParam (const std::string key);
+    bool getBoolParam (const std::string key);
 
 private:
     int mArgCount = 0;

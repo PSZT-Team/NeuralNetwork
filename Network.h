@@ -25,6 +25,9 @@ public:
 	void run ();
 
 private:
+    // Load parameters from XML config file.
+    void loadParameters ();
+
 	// Load data from file (if given)
 	bool acquireData ();
 

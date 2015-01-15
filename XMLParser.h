@@ -60,6 +60,7 @@ public:
 
     // Search for value in XML structure.
     // \param Type : Expecting type of return value to be obtained from string.
+    // \param string tagName : First matched tag name to obtain attribute from.
     template <typename Type>
     bool searchForValue (Tag & tag, const std::string & tagName, 
                          const std::string & attributeName, Type & value);

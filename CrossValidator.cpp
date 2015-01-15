@@ -17,9 +17,10 @@ void CrossValidator::addIterationInfo (IterationInfo<unsigned int> & iterationIn
 void CrossValidator::addIterationInfo (TestResults & testResults) {
     // If results are empty.
     if (testResults.size () == 0) {
-        std::cout << " >> ERROR: Provided results are empty!\n";
-        std::cout << " >>        Iteration: " << mIterationCount << " (counting from 0).\n";
-        std::cout << " >>        Expected results number: " << getTestSetSize () << ".\n";
+        std::cout << "\n  <!> ERROR <!>\n"; 
+        std::cout << "  Provided results are empty!\n";
+        std::cout << "  Iteration: " << mIterationCount << " (counting from 0).\n";
+        std::cout << "  Expected results number: " << getTestSetSize () << ".\n";
         return;
     }
     // Otherwise...
@@ -92,8 +93,9 @@ void CrossValidator::setCapacity (const unsigned int capacity) {
 
 #ifdef __VERBOSE
     if (capacity % CV_ITERATIONS_NUMBER != 0) {
-        std::cout << " >> WARNING: Number of all records is not divisible by iteration number.\n";
-        std::cout << "             To achieve equinumerous test sets, some records will be ignored.\n";
+        std::cout << "\n <!> WARNING <!>\n";
+        std::cout << "  Number of all records is not divisible by iteration number.\n";
+        std::cout << "  To achieve equinumerous test sets, some records will be ignored.\n";
     }
 #endif
 }

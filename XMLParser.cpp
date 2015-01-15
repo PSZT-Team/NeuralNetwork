@@ -13,7 +13,8 @@ bool XMLParser::parseFile () {
 
     // Check filename.
     if (isFilenameGiven && mFilename == "") {
-        std::cout << " >> ERROR: Requested file parsing on empty filename!\n";
+        std::cout << "\n <!> ERROR <!>\n";
+        std::cout << "  Requested file parsing on empty filename!\n";
         return false;
     }
 
@@ -22,7 +23,8 @@ bool XMLParser::parseFile () {
     // Open file
     xmlFile.open (mFilename, std::ios::in);
     if (!xmlFile.is_open ()) {
-        std::cout << " >> ERROR: Cannot open XML config file! (file: " + mFilename + ")\n";
+        std::cout << "\n <!> ERROR <!>\n";
+        std::cout << "  Cannot open XML config file! (file: " + mFilename + ")\n";
         return false;
     }
 
@@ -41,9 +43,11 @@ bool XMLParser::parseFile () {
     else
         return false;
 
-    // TEMP Print XML Network config.
+#ifdef __VERBOSE
+    // Print XML Network config.
     std::cout << "XML config file structure\n--------------------------\n";
     this->printRecursive (rootTag, 0);
+#endif
 
     return true;
 }
@@ -62,29 +66,24 @@ bool XMLParser::parseHeader (Tag & headerTag, std::string & content) {
 
         // Parse header attributes.
         headerTag.name = "xml";
+        headerTag.isEmpty = false;
         if (!parseAttributes (content.substr (openPos + openString.size (),
             closePos - openPos - openString.size ()), headerTag)) {
 #ifdef __VERBOSE
-            std::cout << " >> WARNING: XML header's attributes are incorrect!\n";
+            std::cout << "\n <!> WARNING <!>\n";
+            std::cout << "  XML header's attributes are incorrect!\n";
 #endif
             return false;
         }
-#ifdef __VERBOSE
-        else {
-            std::cout << "XML config file header:\n  ";
-            for (Attribute & attr : headerTag.attributes) {
-                std::cout << attr.name << "=\"" << attr.value << "\"  ";
-            }
-            std::cout << "\n\n";
-        }
-#endif
+
         // Erase header from content
         content = content.substr (closePos + closeString.size (),
                                   content.size () - closePos - closeString.size ());
     }
     else {
 #ifdef __VERBOSE
-        std::cout << " >> WARNING: XML config file has incorrect header!\n";
+        std::cout << "\n <!> WARNING <!>\n";
+        std::cout << "  XML config file has incorrect header!\n";
 #endif
         return false;
     }
@@ -198,7 +197,8 @@ bool XMLParser::parseAttributes (std::string content, Tag & tag) {
             content = content.substr (equalsPos + 1, content.size () - equalsPos - 1);
         }
         catch (...) {
-            std::cout << " >> ERROR: Parsing attribute name for tag '" << tag.name << "' failed!\n";
+            std::cout << "\n <!> ERROR <!>\n";
+            std::cout << "  Parsing attribute name for tag '" << tag.name << "' failed!\n";
             return false;
         }
 
@@ -219,17 +219,20 @@ bool XMLParser::parseAttributes (std::string content, Tag & tag) {
                     removePreceedingSpaces (content);
                 }
                 else {
-                    std::cout << " >> ERROR: Invalid value for attribute '" << name << "'.\n";
+                    std::cout << "\n <!> ERROR <!>\n";
+                    std::cout << "  Invalid value for attribute '" << name << "'.\n";
                     return false;
                 }
             }
             else {
-                std::cout << " >> ERROR: Invalid value for attribute '" << name << "'.\n";
+                std::cout << "\n <!> ERROR <!>\n";
+                std::cout << "  Invalid value for attribute '" << name << "'.\n";
                 return false;
             }
         }
         catch (...) {
-            std::cout << " >> ERROR: Parsing attribute value for tag '" << tag.name << "' failed!\n";
+            std::cout << "\n <!> ERROR <!>\n";
+            std::cout << "  Parsing attribute value for tag '" << tag.name << "' failed!\n";
             return false;
             // Find new potential attribute.
             removePreceedingSpaces (content);

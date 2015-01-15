@@ -21,7 +21,8 @@ bool OutputManager::saveResults (DataCollector * dataCollector, bool defaultPath
     // Open file.
     output.open (resultsPath, std::ios::out | std::ios::trunc);
     if (!output.is_open ()) {
-        std::cout << " >> ERROR: Saving results to file failed!  (file: " + resultsPath + ")\n";
+        std::cout << "\n <!> ERROR <!>\n";
+        std::cout << "  Saving results to file failed!(file: " + resultsPath + ")\n";
         return false;
     }
 
@@ -46,7 +47,8 @@ bool OutputManager::saveStats (CrossValidator * crossValidator, bool defaultPath
     templatePath += TEMPLATE_FILE;
     templateFile.open (templatePath, std::ios::in);
     if (!templateFile.is_open ()) {
-        std::cout << " >> ERROR: Cannot open cross validation stats template file! (file: " + templatePath + ")\n";
+        std::cout << "\n <!> ERROR <!>\n";
+        std::cout << "  Cannot open cross validation stats template file! (file: " + templatePath + ")\n";
         return false;
     }
 
@@ -66,7 +68,8 @@ bool OutputManager::saveStats (CrossValidator * crossValidator, bool defaultPath
     // Open file.
     output.open (statsPath, std::ios::out | std::ios::trunc);
     if (!output.is_open ()) {
-        std::cout << " >> ERROR: Saving results to file failed!  (file: " + statsPath + ")\n";
+        std::cout << "\n <!> ERROR <!>\n";
+        std::cout << "  Saving results to file failed!  (file: " + statsPath + ")\n";
         return false;
     }
 
@@ -121,7 +124,8 @@ bool OutputManager::saveGlobalStats (IterationInfo<Type> * iterationInfo, const 
     // Open global NON-formatted file.
     output.open (globalStatsPath, std::ios::out | std::ios::app);
     if (!output.is_open ()) {
-        std::cout << " >> ERROR: Saving global results to file failed!  (file: " + globalStatsPath + ")\n";
+        std::cout << "\n <!> ERROR <!>\n";
+        std::cout << "  Saving global results to file failed!  (file: " + globalStatsPath + ")\n";
         return false;
     }
 
@@ -132,7 +136,8 @@ bool OutputManager::saveGlobalStats (IterationInfo<Type> * iterationInfo, const 
     // Open global NON-formatted file.
     output.open (globalStatsPathF, std::ios::out | std::ios::app);
     if (!output.is_open ()) {
-        std::cout << " >> ERROR: Saving global formatted results to file failed!  (file: " + globalStatsPathF + ")\n";
+        std::cout << "\n <!> ERROR <!>\n";
+        std::cout << "  Saving global formatted results to file failed!  (file: " + globalStatsPathF + ")\n";
         return false;
     }
 
