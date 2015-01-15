@@ -121,10 +121,10 @@ void Network::saveStats () {
     std::string filename = mInterface.getStringParam ("--stats");
     if (filename != "") {
         mOutputManager.setStatsFilename (filename);
-        mOutputManager.saveStats (&mCrossValidator, false);
+        mOutputManager.saveStats (&mLayersTable, &mCrossValidator, false);
     }
     else
-        mOutputManager.saveStats (&mCrossValidator);
+        mOutputManager.saveStats (&mLayersTable, &mCrossValidator);
 }
 
 void Network::initializeLayers (const int& inputLayer, const int& hiddenLayer, const int& outputLayer) {

@@ -5,7 +5,7 @@
     Notice:
     - '<', '/' and '>' characters can be only used within tag declaration.
 
-    Not supported or not to be ignored:
+    Not supported or not to be ignored when parsing:
     - XML comments.
     - Nested tags with the same name.
     - Spaces in closing tags.

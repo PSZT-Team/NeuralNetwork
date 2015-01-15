@@ -55,8 +55,8 @@ void Layer::setOutput (ProteinData* proteinData)  {
 }
 
 
-int Layer::getLayerSize () {
-	return layerSize;
+unsigned int Layer::getLayerSize () {
+    return neurons.size ();
 }
 
 std::vector<Neuron*> Layer::getNeurons () const  {

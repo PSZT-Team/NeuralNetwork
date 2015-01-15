@@ -1,6 +1,9 @@
 /**
     Manages cross validation procedure, holds all necessary validation
     indicators and results. Generates stats to be saved.
+
+    TODO
+    - 'Division by zero' check when calculating indicators.
 */
 
 #ifndef CROSS_VALIDATOR
@@ -8,7 +11,10 @@
 
 #define CV_ITERATIONS_NUMBER_DEFAULT 10
 #define CV_GLOBAL_FILE "cv_global.txt"
+#define CV_GLOBAL_FILE_DETAILED "cv_global_detailed.txt"
 #define CV_GLOBAL_FORMATTED_FILE "cv_global_formatted.txt"
+#define CV_GLOBAL_FORMATTED_FILE_DETAILED "cv_global_formatted_detailed.txt"
+
 
 #include "IterationInfo.h"
 #include <array>

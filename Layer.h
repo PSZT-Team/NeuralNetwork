@@ -9,6 +9,9 @@
 
 class Layer {
 public:
+    // Layer container (first - input, last - output and in between - hidden)
+    typedef std::vector<Layer*> Layers;
+
 	Layer ();
 	~Layer ();
 
@@ -44,7 +47,7 @@ public:
 	
 	std::vector<Neuron*> getNeurons () const;
 	
-	int getLayerSize ();
+	unsigned int getLayerSize ();
 	
 
 private:

@@ -37,7 +37,8 @@ bool OutputManager::saveResults (DataCollector * dataCollector, bool defaultPath
     return true;
 }
 
-bool OutputManager::saveStats (CrossValidator * crossValidator, bool defaultPath) {
+bool OutputManager::saveStats (Layer::Layers * layers, CrossValidator * crossValidator, bool defaultPath) {
+    setLayers (layers);
     std::fstream output;
     std::ifstream templateFile;
     std::string statsPath = mStatsFilename, templatePath = HEADERS_FOLDER,
@@ -82,6 +83,18 @@ bool OutputManager::saveStats (CrossValidator * crossValidator, bool defaultPath
     Utilities::replaceKeyword ("$date", currentDateTime, templateContent);
     Utilities::replaceKeyword ("$iterations", std::to_string (CrossValidator::CV_ITERATIONS_NUMBER), templateContent);
     Utilities::replaceKeyword ("$records", std::to_string (crossValidator->getTestSetSize () * CrossValidator::CV_ITERATIONS_NUMBER), templateContent);
+    Utilities::replaceKeyword ("$alpha", std::to_string (Neuron::ALPHA), templateContent);
+    Utilities::replaceKeyword ("$beta", std::to_string (Neuron::BETA), templateContent);
+    Utilities::replaceKeyword ("$eta", std::to_string (Neuron::ETA), templateContent);
+    Utilities::replaceKeyword ("$input", std::to_string (layers->operator[](0)->getLayerSize ()), templateContent);
+    Utilities::replaceKeyword ("$output", std::to_string (layers->operator[](layers->size () - 1)->getLayerSize ()), templateContent);
+
+    // Hidden layers info.
+    std::string hiddenLayers = "";
+    for (unsigned int i = 1; i < layers->size () - 1; ++i) {
+        hiddenLayers += std::to_string (layers->operator[](i)->getLayerSize ()) + " ";
+    }
+    Utilities::replaceKeyword ("$hidden", hiddenLayers, templateContent);
 
     // Prepare data for non-global stats.
     for (unsigned int iteration = 0; iteration < CrossValidator::CV_ITERATIONS_NUMBER; ++iteration) {
@@ -113,13 +126,20 @@ void OutputManager::setStatsFilename (const std::string filename) {
     this->mStatsFilename = filename;
 }
 
+void OutputManager::setLayers (Layer::Layers * layers) {
+    this->mLayers = layers;
+}
+
 template <typename Type>
 bool OutputManager::saveGlobalStats (IterationInfo<Type> * iterationInfo, const std::string currentDatetime) {
     std::fstream output;
     //std::string row = "", rowF = "";
-    std::string globalStatsPath = DATA_FOLDER, globalStatsPathF = DATA_FOLDER;
+    std::string globalStatsPath = DATA_FOLDER, globalStatsPathF = DATA_FOLDER,
+        globalStatsPathDetailed = DATA_FOLDER, globalStatsPathDetailedF = DATA_FOLDER;
     globalStatsPath += CV_GLOBAL_FILE;
     globalStatsPathF += CV_GLOBAL_FORMATTED_FILE;
+    globalStatsPathDetailed += CV_GLOBAL_FILE_DETAILED;
+    globalStatsPathDetailedF += CV_GLOBAL_FORMATTED_FILE_DETAILED;
 
     // Open global NON-formatted file.
     output.open (globalStatsPath, std::ios::out | std::ios::app);
@@ -130,10 +150,22 @@ bool OutputManager::saveGlobalStats (IterationInfo<Type> * iterationInfo, const 
     }
 
     // Save non-formatted file data.
-    output << currentDatetime << ";" << prepareRow (iterationInfo, true, false);
+    output << currentDatetime << ";" << prepareRow (iterationInfo, true, false, false, false);
     output.close ();
 
-    // Open global NON-formatted file.
+    // Open global NON-formatted, detailed file.
+    output.open (globalStatsPathDetailed, std::ios::out | std::ios::app);
+    if (!output.is_open ()) {
+        std::cout << "\n <!> ERROR <!>\n";
+        std::cout << "  Saving global detailed results to file failed!  (file: " + globalStatsPathDetailed + ")\n";
+        return false;
+    }
+
+    // Save non-formatted detailed file data.
+    output << currentDatetime << ";" << prepareRow (iterationInfo, true, false, false, true);
+    output.close ();
+
+    // Open global formatted file.
     output.open (globalStatsPathF, std::ios::out | std::ios::app);
     if (!output.is_open ()) {
         std::cout << "\n <!> ERROR <!>\n";
@@ -141,21 +173,33 @@ bool OutputManager::saveGlobalStats (IterationInfo<Type> * iterationInfo, const 
         return false;
     }
 
-    // Save non-formatted file data.
-    output << currentDatetime << " | " << prepareRow (iterationInfo, true, true);
+    // Save formatted file data.
+    output << currentDatetime << " | " << prepareRow (iterationInfo, true, true, false, false);
+    output.close ();
+
+    // Open global formatted detailed file.
+    output.open (globalStatsPathDetailedF, std::ios::out | std::ios::app);
+    if (!output.is_open ()) {
+        std::cout << "\n <!> ERROR <!>\n";
+        std::cout << "  Saving global formatted detailed results to file failed!  (file: " + globalStatsPathDetailedF + ")\n";
+        return false;
+    }
+
+    // Save formatted detailed file data.
+    output << currentDatetime << " | " << prepareRow (iterationInfo, true, true, false, true);
     output.close ();
 
     return true;
 }
 
 std::string OutputManager::prepareRow (CrossValidator::DataContainer * dataContainer, const unsigned int iteration,
-                                       bool isGlobal, bool isFormatted, bool isAverage) {
-    return prepareRow<unsigned int> (&dataContainer->operator[](iteration), isGlobal, isFormatted, isAverage);
+                                       bool isGlobal, bool isFormatted, bool isAverage, bool isDetailed) {
+    return prepareRow<unsigned int> (&dataContainer->operator[](iteration), isGlobal, isFormatted, isAverage, isDetailed);
 }
 
 template <typename Type>
 std::string OutputManager::prepareRow (IterationInfo<Type> * iterationInfo, bool isGlobal,
-                                       bool isFormatted, bool isAverage) {
+                                       bool isFormatted, bool isAverage, bool isDetailed) {
     std::string row = "";
     std::string separator = " | ";
 
@@ -172,7 +216,7 @@ std::string OutputManager::prepareRow (IterationInfo<Type> * iterationInfo, bool
         }
         // Non-formatted.
         else {
-            // Add non-formatted date, iterations and records.
+            // Add non-formatted iterations and records.
             separator = ";";
             row += formatWidth<unsigned int> (CrossValidator::CV_ITERATIONS_NUMBER, 0, ' ', separator);
             row += formatWidth<unsigned int> ((unsigned int)(iterationInfo->mTP + iterationInfo->mTN +
@@ -194,8 +238,26 @@ std::string OutputManager::prepareRow (IterationInfo<Type> * iterationInfo, bool
         }
     }
 
+    // Add network parameters info.
+    unsigned int size = isFormatted ? 5 : 0;
+    row += formatWidth<float> (Neuron::ALPHA, size, ' ', separator);
+    row += formatWidth<float> (Neuron::BETA, size, ' ', separator);
+    row += formatWidth<float> (Neuron::ETA, size, ' ', separator);
+
+    // Add layers information.
+    std::string hiddenLayers = "";
+    for (unsigned int i = 1; i < mLayers->size () - 1; ++i) {
+        hiddenLayers += std::to_string (mLayers->operator[](i)->getLayerSize ());
+        if (i != mLayers->size () - 2)
+            hiddenLayers += " ";
+    }
+    row += formatWidth<int> (mLayers->operator[](0)->getLayerSize (), size, ' ', separator);
+    size = isFormatted ? 6 : 0;
+    row += formatWidth<std::string> (hiddenLayers, size, ' ', separator);
+    row += formatWidth<int> (mLayers->operator[](mLayers->size() - 1)->getLayerSize (), size, ' ', separator);
+
     // Add classifications.
-    unsigned int size = isFormatted ? 7 : 0;
+    size = isFormatted ? 7 : 0;
     row += formatWidth<Type> (iterationInfo->mTP, size, ' ', separator);
     row += formatWidth<Type> (iterationInfo->mTN, size, ' ', separator);
     row += formatWidth<Type> (iterationInfo->mFP, size, ' ', separator);
@@ -204,14 +266,18 @@ std::string OutputManager::prepareRow (IterationInfo<Type> * iterationInfo, bool
     // Add indicators.
     size = isFormatted ? 5 : 0;
     row += formatWidth<float> (iterationInfo->mAccuracy, size, '0', separator);
-    row += formatWidth<float> (iterationInfo->mSpecificity, size, '0', separator);
-    row += formatWidth<float> (iterationInfo->mSensitivity, size, '0', separator);
-    row += formatWidth<float> (iterationInfo->mPrecision, size, '0', separator);
-    row += formatWidth<float> (iterationInfo->mGMean, size, '0', separator);
-    row += formatWidth<float> (iterationInfo->mAUC, size, '0', separator);
-    row += formatWidth<float> (iterationInfo->mF1, size, '0', separator);
-    row += formatWidth<float> (iterationInfo->mMCC, size, '0', separator, true);
 
+    // Detailed info.
+    if (isGlobal && isDetailed) {
+        row += formatWidth<float> (iterationInfo->mSpecificity, size, '0', separator);
+        row += formatWidth<float> (iterationInfo->mSensitivity, size, '0', separator);
+        row += formatWidth<float> (iterationInfo->mPrecision, size, '0', separator);
+        row += formatWidth<float> (iterationInfo->mGMean, size, '0', separator);
+        row += formatWidth<float> (iterationInfo->mAUC, size, '0', separator);
+        row += formatWidth<float> (iterationInfo->mF1, size, '0', separator);
+        row += formatWidth<float> (iterationInfo->mMCC, size, '0', separator, true);
+    }
+    
     row += "\n";
 
     return row;

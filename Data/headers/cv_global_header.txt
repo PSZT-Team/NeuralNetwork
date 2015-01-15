@@ -1,1 +1,1 @@
-Date;Iterations;Records;TP;TN;FP;FN;Accuracy;Specificity;Sensitivity;Precision;GMean;AUC;F1 Score;MCC
+Date;Iterations;Records;Alpha;Beta;Eta;Input;Hidden;Output;TP;TN;FP;FN;Accuracy

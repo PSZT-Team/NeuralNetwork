@@ -1,5 +1,8 @@
 /**
 	Main project class. Aggregates all network layers, interface and statistics.
+
+    TODO
+    - Obtaining information about layers and neurons from config file.
 */
 
 #ifndef NETWORK
@@ -52,7 +55,7 @@ private:
 	CrossValidator mCrossValidator;
     XMLParser mXMLParser;
 	
-	std::vector <Layer*> mLayersTable;
+	Layer::Layers mLayersTable;
 
 };
 

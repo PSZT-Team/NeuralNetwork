@@ -1,8 +1,19 @@
 ### CROSS VALIDATION RESULTS ###
 
+	>>> DATASET INFO <<<
 DATE       | $date 
 ITERATIONS | $iterations
 RECORDS    | $records
+
+	>>> NETWORK CONFIG <<<
+ALPHA      | $alpha
+BETA       | $beta
+ETA        | $eta
+
+	>>> LAYERS INFO <<<
+INPUT	   | $input
+HIDDEN     | $hidden
+OUTPUT     | $output
 
 ITERATION | TP      | TN      | FP      | FN      | ACCU. | SPEC. | SENS. | PREC. | GMEAN | AUC   | F1    | MCC    |
 ====================================================================================================================
