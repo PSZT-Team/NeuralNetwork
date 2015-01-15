@@ -98,14 +98,14 @@ bool OutputManager::saveStats (Layer::Layers * layers, CrossValidator * crossVal
 
     // Prepare data for non-global stats.
     for (unsigned int iteration = 0; iteration < CrossValidator::CV_ITERATIONS_NUMBER; ++iteration) {
-        std::string row = prepareRow (crossValidator->getDataContainer (), iteration, false, true);
+        std::string row = prepareRow (crossValidator->getDataContainer (), iteration, false, true, false, true);
         data += row;
     }
 
     // Insert data and average.
     IterationInfo<float> averageII = crossValidator->getAverageIterationInfo ();
     Utilities::replaceKeyword ("$rows", data, templateContent);
-    Utilities::replaceKeyword ("$average", prepareRow (&averageII, false, true, true), templateContent);
+    Utilities::replaceKeyword ("$average", prepareRow (&averageII, false, true, true, true), templateContent);
 
     // Save stats.
     output << templateContent;
@@ -238,23 +238,28 @@ std::string OutputManager::prepareRow (IterationInfo<Type> * iterationInfo, bool
         }
     }
 
-    // Add network parameters info.
-    unsigned int size = isFormatted ? 5 : 0;
-    row += formatWidth<float> (Neuron::ALPHA, size, ' ', separator);
-    row += formatWidth<float> (Neuron::BETA, size, ' ', separator);
-    row += formatWidth<float> (Neuron::ETA, size, ' ', separator);
+    unsigned int size = 0;
 
-    // Add layers information.
-    std::string hiddenLayers = "";
-    for (unsigned int i = 1; i < mLayers->size () - 1; ++i) {
-        hiddenLayers += std::to_string (mLayers->operator[](i)->getLayerSize ());
-        if (i != mLayers->size () - 2)
-            hiddenLayers += " ";
+    if (isGlobal) {
+
+        // Add network parameters info.
+        size = isFormatted ? 5 : 0;
+        row += formatWidth<float> (Neuron::ALPHA, size, ' ', separator);
+        row += formatWidth<float> (Neuron::BETA, size, ' ', separator);
+        row += formatWidth<float> (Neuron::ETA, size, ' ', separator);
+
+        // Add layers information.
+        std::string hiddenLayers = "";
+        for (unsigned int i = 1; i < mLayers->size () - 1; ++i) {
+            hiddenLayers += std::to_string (mLayers->operator[](i)->getLayerSize ());
+            if (i != mLayers->size () - 2)
+                hiddenLayers += " ";
+        }
+        row += formatWidth<int> (mLayers->operator[](0)->getLayerSize (), size, ' ', separator);
+        size = isFormatted ? 6 : 0;
+        row += formatWidth<std::string> (hiddenLayers, size, ' ', separator);
+        row += formatWidth<int> (mLayers->operator[](mLayers->size () - 1)->getLayerSize (), size, ' ', separator);
     }
-    row += formatWidth<int> (mLayers->operator[](0)->getLayerSize (), size, ' ', separator);
-    size = isFormatted ? 6 : 0;
-    row += formatWidth<std::string> (hiddenLayers, size, ' ', separator);
-    row += formatWidth<int> (mLayers->operator[](mLayers->size() - 1)->getLayerSize (), size, ' ', separator);
 
     // Add classifications.
     size = isFormatted ? 7 : 0;
@@ -268,7 +273,7 @@ std::string OutputManager::prepareRow (IterationInfo<Type> * iterationInfo, bool
     row += formatWidth<float> (iterationInfo->mAccuracy, size, '0', separator);
 
     // Detailed info.
-    if (isGlobal && isDetailed) {
+    if (isDetailed) {
         row += formatWidth<float> (iterationInfo->mSpecificity, size, '0', separator);
         row += formatWidth<float> (iterationInfo->mSensitivity, size, '0', separator);
         row += formatWidth<float> (iterationInfo->mPrecision, size, '0', separator);
@@ -277,7 +282,7 @@ std::string OutputManager::prepareRow (IterationInfo<Type> * iterationInfo, bool
         row += formatWidth<float> (iterationInfo->mF1, size, '0', separator);
         row += formatWidth<float> (iterationInfo->mMCC, size, '0', separator, true);
     }
-    
+
     row += "\n";
 
     return row;

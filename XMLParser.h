@@ -1,16 +1,3 @@
-/**
-    XML file parser. Stores content of XML file in tree-like form.
-    All names and values are of type std::string.
-
-    Notice:
-    - '<', '/' and '>' characters can be only used within tag declaration.
-
-    Not supported or not to be ignored when parsing:
-    - XML comments.
-    - Nested tags with the same name.
-    - Spaces in closing tags.
-*/
-
 #ifndef XML_PARSER
 #define XML_PARSER
 
@@ -26,6 +13,18 @@
 #include <iomanip>
 #include "Utilities.h"
 
+/**
+    XML file parser. Stores content of XML file in tree-like form.
+    All names and values are of type std::string.
+    =======================
+    Notice:
+    - '<', '/' and '>' characters can be only used within tag declaration.
+    =======================
+    Not supported:
+    - XML comments.
+    - Nested tags with the same name. Only supported when listed on after another.
+    - Spaces in closing tags.
+*/
 class XMLParser {
 public:
     // Default constructor with DEFAULT_CONFIG_FILE path.
@@ -49,6 +48,8 @@ public:
     // <tag>...</tag>
     // <emptyTag />
     struct Tag {
+        //Tag (const std::string name, bool isEmpty) : name (name), isEmpty (isEmpty) {
+        //}
         bool isEmpty = false;                       // True if tag has no nested tags. False otherwise.
         std::string name = "";                   // Name of the tag.
         std::vector<Attribute> attributes;  // Vector of possible attributes the tag contains.
@@ -58,12 +59,25 @@ public:
     // Parse given file. Returns true if operation was successful, false otherwise.
     bool parseFile ();
 
-    // Search for value in XML structure.
+    // Search recursively for value in XML structure.
+    // \param Tag tag : Currently searched tag.
     // \param Type : Expecting type of return value to be obtained from string.
     // \param string tagName : First matched tag name to obtain attribute from.
     template <typename Type>
-    bool searchForValue (Tag & tag, const std::string & tagName, 
-                         const std::string & attributeName, Type & value);
+    bool searchValue (Tag & tag, const std::string & tagName,
+                      const std::string & attributeName, Type & value);
+
+    // Search for tag by name. Return given occurence or nullptr (for ex. if exceeded).
+    // \param Tag tag : Currently searched tag.
+    // \param string name : Name of the tag to be found.
+    // \param int occur : Number of tag occurence to be returned (starting from 0).
+    // WARNING: Check XMLParser class comment for important disclaimer.
+    Tag * searchTagByName (Tag & tag, const std::string name, int & occur);
+
+    // Count occurences of specified tag inside another given tag.
+    // \ param Tag parentTag : Tag inside which the search is performed.
+    // \ param Tag searchedTah : Tag to be found and which occurences are counted.
+    unsigned int getOccurences (Tag & parentTag, Tag & searchedTag);
 
     /// Getters
 
@@ -97,8 +111,8 @@ private:
 #endif
 
 template <typename Type>
-inline bool XMLParser::searchForValue (Tag & tag, const std::string & tagName, 
-                                       const std::string & attributeName, Type & value) {
+inline bool XMLParser::searchValue (Tag & tag, const std::string & tagName,
+                                    const std::string & attributeName, Type & value) {
     // Check name of the tag.
     if (tag.name == tagName) {
 
@@ -114,14 +128,14 @@ inline bool XMLParser::searchForValue (Tag & tag, const std::string & tagName,
             }
         }
     }
-    
+
     // No need to go deeper.
     if (tag.isEmpty || tag.tags.size () == 0) {
         return false;
     }
     else {
         for (Tag & childTag : tag.tags) {
-            if (searchForValue (childTag, tagName, attributeName, value))
+            if (searchValue (childTag, tagName, attributeName, value))
                 return true;
         }
     }

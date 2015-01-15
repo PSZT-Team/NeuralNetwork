@@ -52,6 +52,35 @@ bool XMLParser::parseFile () {
     return true;
 }
 
+XMLParser::Tag * XMLParser::searchTagByName (Tag & tag, const std::string name, int & occur) {
+    // Check current tag
+    if (tag.name == name) {
+        --occur;
+        return &tag;
+    }
+    else {
+        if (tag.isEmpty || tag.tags.size () == 0) {
+            return nullptr;
+        }
+        else {
+            Tag * searchedTag = nullptr;
+            for (Tag & childTag : tag.tags) {
+                searchedTag = searchTagByName (childTag, name, occur);
+                if (searchedTag != nullptr) {
+                    if (occur < 0)
+                        return searchedTag;
+                }
+            }
+        }
+    }
+
+    return nullptr;
+}
+
+unsigned int XMLParser::getOccurences (Tag & parentTag, Tag & searchedTag) {
+    return 0;
+}
+
 XMLParser::Tag * XMLParser::getRootTag () {
     return &rootTag;
 }
@@ -136,7 +165,6 @@ bool XMLParser::parseTag (std::string content, Tag & tag) {
         closeTag = "</" + name + ">";
         closeTagPos = content.find (closeTag);
         if (!isTagEmpty) {
-
             // Closing tag found.
             if (closeTagPos != STRING_NOT_FOUND) {
 

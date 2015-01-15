@@ -19,7 +19,7 @@ void Network::run () {
         mInterface.printUsage ();
         return;
     }
-    
+
 
     // Obtain data.
     std::cout << "\n>>> Obtaining data from file <<<\n";
@@ -34,18 +34,6 @@ void Network::run () {
 
     mXMLParser.parseFile ();
     loadParameters ();
-   
-
-    // TODO MOVE THIS TO loadParameters METHOD
-    // Initialize layers.
-    std::vector<int> lay;
-
-    lay.push_back (3);
-    lay.push_back (5);
-    lay.push_back (3);
-    lay.push_back (1);
-
-    initializeLayers (lay);
 
     // Learning and testing iterations.
     std::cout << "\n>>> Learning and testing <<<\n";
@@ -71,13 +59,40 @@ void Network::run () {
 void Network::loadParameters () {
     int iterations = 0, inputNeurons = 0, outputNeurons = 0, hiddenLayers = 0;
     float alpha = 0.f, beta = 0.f, eta = 0.f;
-    mXMLParser.searchForValue<int> (*mXMLParser.getRootTag (), "Network", "Iterations", iterations);
-    mXMLParser.searchForValue<float> (*mXMLParser.getRootTag (), "Network", "Alpha", alpha);
-    mXMLParser.searchForValue<float> (*mXMLParser.getRootTag (), "Network", "Beta", beta);
-    mXMLParser.searchForValue<float> (*mXMLParser.getRootTag (), "Network", "Eta", eta);
+    std::vector<int> hiddenLayerNeurons;
 
+    // Obtain network parmeters and input/output layers neurons.
+    mXMLParser.searchValue<int> (*mXMLParser.getRootTag (), "Network", "Iterations", iterations);
+    mXMLParser.searchValue<float> (*mXMLParser.getRootTag (), "Network", "Alpha", alpha);
+    mXMLParser.searchValue<float> (*mXMLParser.getRootTag (), "Network", "Beta", beta);
+    mXMLParser.searchValue<float> (*mXMLParser.getRootTag (), "Network", "Eta", eta);
+    mXMLParser.searchValue<int> (*mXMLParser.getRootTag (), "InputLayer", "Neurons", inputNeurons);
+    mXMLParser.searchValue<int> (*mXMLParser.getRootTag (), "OutputLayer", "Neurons", outputNeurons);
+
+    // Obtain hideen layer layout.
+    int occurence = 0;
+    int occurenceStart = 0;
+    XMLParser::Tag * hiddenTag = nullptr;
+    hiddenLayerNeurons.push_back (inputNeurons);
+    hiddenTag = mXMLParser.searchTagByName (*mXMLParser.getRootTag (), "HiddenLayer", occurence);
+    while (hiddenTag != nullptr) {
+        int neurons;
+        mXMLParser.searchValue<int> (*hiddenTag, "HiddenLayer", "Neurons", neurons);
+        hiddenLayerNeurons.push_back (neurons);
+
+        ++occurenceStart;
+        occurence = occurenceStart;
+        hiddenTag = mXMLParser.searchTagByName (*mXMLParser.getRootTag (), "HiddenLayer", occurence);
+    }
+    hiddenLayerNeurons.push_back (outputNeurons);
+
+    // Set iterations and network parameters.
     mCrossValidator.setIterationsNumber (iterations);
     Neuron::setParameters (alpha, beta, eta);
+
+    // Initialize layers.
+    initializeLayers (hiddenLayerNeurons);
+
 
 #ifdef __VERBOSE
     std::cout << "\nIterations: " << iterations << "\n";
@@ -218,7 +233,7 @@ void Network::learn (const std::vector<ProteinData *> data) {
     std::cout << "f : " << FN + FP << std::endl;
     std::cout << " \t ERMS : " << ERMS << std::endl;
 #endif
-}
+    }
 
 void Network::test (CrossValidator::TestResults & results, std::vector<ProteinData*> data) {
     // PART 1 - CALCULATING OUTPUT
