@@ -63,8 +63,7 @@ public:
     // \param Tag tag : Currently searched tag.
     // \param Type : Expecting type of return value to be obtained from string.
     // \param string tagName : First matched tag name to obtain attribute from.
-    template <typename Type>
-    bool searchValue (Tag & tag, const std::string & tagName,
+    template <typename Type> bool searchValue (Tag & tag, const std::string & tagName,
                       const std::string & attributeName, Type & value);
 
     // Search for tag by name. Return given occurence or nullptr (for ex. if exceeded).

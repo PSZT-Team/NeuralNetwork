@@ -53,6 +53,8 @@ public:
 		*/
 	std::vector <ProteinData*> getCheckData (const unsigned int & begin, const unsigned int & length);
 
+    void normalize ();
+
     // Getters
 
     unsigned int getDataCount ();   // Return number of all records.

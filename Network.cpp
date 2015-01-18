@@ -35,6 +35,13 @@ void Network::run () {
     mXMLParser.parseFile ();
     loadParameters ();
 
+    // Optional normalization.
+    std::string normalizeValue = "";
+    if (mXMLParser.searchValue<std::string> (*mXMLParser.getRootTag (), "Network", "Normalize", normalizeValue)) {
+        if (normalizeValue == "true")
+            mDataCollector.normalize ();
+    }
+
     // Learning and testing iterations.
     std::cout << "\n>>> Learning and testing <<<\n";
     for (unsigned int i = 0; i < CrossValidator::CV_ITERATIONS_NUMBER; ++i) {
