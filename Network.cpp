@@ -264,13 +264,13 @@ void Network::test (CrossValidator::TestResults & results, std::vector<ProteinDa
             if (dataSet->getReactionResult () > 0)
                 results.push_back (std::make_pair (true, true));
             else
-                results.push_back (std::make_pair (true, false));
+                results.push_back (std::make_pair (false, true));
         }
         else {
             if (dataSet->getReactionResult () < 0)
                 results.push_back (std::make_pair (false, false));
             else
-                results.push_back (std::make_pair (false, true));
+                results.push_back (std::make_pair (true, false));
         }
 
 
