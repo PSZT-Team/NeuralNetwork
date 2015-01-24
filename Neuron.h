@@ -43,6 +43,8 @@ public:
 	*/
 	void calculateOutput (const std::vector<Neuron*> & prevLayerNeurons);
 
+
+	void calculateLastOutput (const std::vector<Neuron*> & prevLayerNeurons);
 	
 	/*
 	sets sizes of weights vectors, set sum at 0 and so on

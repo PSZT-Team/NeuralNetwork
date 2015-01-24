@@ -53,10 +53,11 @@ private:
 
     void initializeLayers (std::vector<int> layers);
 
+	
 
     void learn (const std::vector<ProteinData *> data);
     void test (CrossValidator::TestResults & results, std::vector<ProteinData*> data);
-
+	void resetNetwork ();
     // Network modules
     Interface mInterface;
     DataCollector mDataCollector;

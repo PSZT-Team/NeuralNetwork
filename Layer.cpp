@@ -27,6 +27,13 @@ void Layer::commandToCalculate (const Layer& prevLayer) {
 
 }
 
+void Layer::calculateOutput (const Layer& prevLayer) {
+	for (auto &i : neurons) {
+		i->calculateLastOutput (prevLayer.getNeurons ());
+	}
+
+}
+
 void Layer::calculateErrors (const Layer& nextLayer) {
 	
 	for (unsigned int i = 0; i < neurons.size (); ++i ) {
@@ -45,6 +52,14 @@ void Layer::correctWeights (const Layer & prevLayer) {
 void Layer::outputLayerError (const int & result) {
 
 	neurons [0]->setError ((float) result);
+
+}
+
+void Layer::resetLayer () {
+
+	for (auto &i : neurons) {
+		i->randomWeight ();
+	}
 
 }
 

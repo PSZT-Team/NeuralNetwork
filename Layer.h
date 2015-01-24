@@ -20,6 +20,8 @@ public:
 	void initializeLayer (const unsigned int& size, const unsigned int& prevLayerSize);
 	
 	void commandToCalculate (const Layer& prevLayer);
+
+	void calculateOutput (const Layer& prevLayer);
 	
 	void calculateErrors (const Layer& nextLayer);
 
@@ -27,6 +29,9 @@ public:
 
 	void outputLayerError (const int & output);
 	
+	void resetLayer ();
+
+
 	//temp funtion
 	void printOutput () {
 		std::cout << neurons [0]->getOutput ();
@@ -36,6 +41,7 @@ public:
 		return neurons [0]->getOutput ();
 	}
 
+
 	/*
 	ONLY FOR INPUT LAYERS
 	TO DO (maybe) - CREATE InputLayer : Layer class
@@ -43,7 +49,7 @@ public:
 	and resets wage.
 	*/
 	void setOutput ( ProteinData* proteinData);
-
+	
 	
 	std::vector<Neuron*> getNeurons () const;
 	
