@@ -23,7 +23,7 @@ Neuron::Neuron (const int& prevLayerSize) {
 
 
 void Neuron::initializeNeuron (const int & prevLayerSize) {
-	for (int i = 0; i < prevLayerSize; ++i) {
+	for (int i = 0; i <= prevLayerSize; ++i) {
 		weight.push_back (0.0f);
 		prevWeight.push_back (0.0f);
 	}
@@ -49,15 +49,18 @@ void Neuron::randomWeight () {
 void Neuron::calculateOutput (const std::vector<Neuron*> & prevLayerNeurons) {
 	output = 0;
 	sum = 0;
-	if (weight.size () != prevLayerNeurons.size ()) {
+	if ((weight.size () - 1) != prevLayerNeurons.size ()) {
 		//CRITICALL ERROR 
 		std::cout << "CRITICAL ERROR" << std::endl;
 		return;
 	}
 
-	for (unsigned int i = 0; i < weight.size (); ++i)  {
+	for (unsigned int i = 0; i < weight.size ()-1; ++i)  {
 		sum += (weight [i] * prevLayerNeurons [i]->getOutput());
 	}
+
+	// const param
+	sum += weight [weight.size () - 1];
 
 	// Hyperbolic tangens
 	output = tanh (BETA * sum);
@@ -66,14 +69,15 @@ void Neuron::calculateOutput (const std::vector<Neuron*> & prevLayerNeurons) {
 void Neuron::calculateLastOutput (const std::vector<Neuron*> & prevLayerNeurons) {
 	output = 0;
 	sum = 0;
-	if (weight.size () != prevLayerNeurons.size ()) {
+	if ((weight.size () -1 )!= prevLayerNeurons.size ()) {
 		//CRITICALL ERROR 
 		std::cout << "CRITICAL ERROR" << std::endl;
 		return;
 	}
-	for (unsigned int i = 0; i < weight.size (); ++i) {
+	for (unsigned int i = 0; i < weight.size ()-1; ++i) {
 		sum += (weight [i] * prevLayerNeurons [i]->getOutput ());
 	}
+	sum += weight [weight.size () - 1];
 	output = sum;
 }
 
@@ -94,21 +98,23 @@ void Neuron::calculateError (const std::vector<Neuron*> & nextNeuronLayer, const
 
 void Neuron::correctWeight (const std::vector<Neuron*> & prevLayerNeurons) {
 
-	if (weight.size () != prevLayerNeurons.size ()) {
+	if ((weight.size () - 1) != prevLayerNeurons.size ()) {
 		//CRITICALL ERROR 
 		std::cout << "CRITICAL ERROR" << std::endl;
 		return;
 	}
-	
-	for (unsigned int i = 0; i < weight.size (); ++i) {
+	float w;
+	for (unsigned int i = 0; i < weight.size () -1 ; ++i) {
 
-		float w = weight [i];
+		w = weight [i];
 		weight [i] += ETA * error * prevLayerNeurons [i]->getOutput () + ALPHA*(weight [i] - prevWeight [i]);
 		//weight [i] += ETA * error * prevLayerNeurons [i]->getOutput ();
-
 		prevWeight [i] = w;
 	}
 
+	w = weight [weight.size () - 1];
+	weight [weight.size () - 1] += ETA*error + ALPHA*(weight [weight.size () - 1] - prevWeight [weight.size () - 1]);
+	prevWeight [weight.size () - 1] = w;
 }
 
 
