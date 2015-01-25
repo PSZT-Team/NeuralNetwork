@@ -1,6 +1,4 @@
-//@autgor Andrzej Siadkowski
 //class responsible for loading and storage data from input file;
-//dasdad
 #ifndef DATACOLLECTOR
 #define DATACOLLECTOR
 

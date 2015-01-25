@@ -1,4 +1,3 @@
-//@author Andrzej Siadkowski
 //Neuron class designed for hidden and output layers
 
 #ifndef NEURON
@@ -16,18 +15,22 @@
 
 class Neuron {
 public:
-    // Network learning parameters.
-    static float ALPHA;
-    static float BETA;
-    static float ETA;
+	// Network learning parameters.
+	static float ALPHA;
+	static float BETA;
+	static float ETA;
 
-    // Set learning parameters values.
-    static void setParameters (const float alpha, const float beta, const float eta);
-
+	
 	Neuron ();
 	~Neuron ();
+
 	Neuron (const int& prevLayerSize);
 	
+	/*
+	sets sizes of weights vectors, set sum at 0 and so on
+	*/
+	void initializeNeuron (const int & prevLayerSize);
+
 	/*
 	function randomizes weight of each input information
 	IMPORTANT AT THE BEGINING OF EVERY CROSS-VALIDATION PROCESS
@@ -43,23 +46,32 @@ public:
 	*/
 	void calculateOutput (const std::vector<Neuron*> & prevLayerNeurons);
 
-
+	/*
+	Function calculates the output value from input data for linear layer.
+	Input parameter are vector of neutrons from previous layer
+	each neutron provides input value for this neutron, returning it's output value
+	output value calculation : sum (weight * input) + free weight
+	*/
 	void calculateLastOutput (const std::vector<Neuron*> & prevLayerNeurons);
 	
 	/*
-	sets sizes of weights vectors, set sum at 0 and so on
+	function calculates output for hidden, sigmoidal layers, where activation function
+	is hyperbolic tangent
 	*/
-	void initializeNeuron (const int & prevLayerSize);
+	void calculateError (const std::vector<Neuron*> & prevNeuronLayers, const int & neuronNumber);
 
 	/*
 	fuction correct every weight.
 	*/
 	void correctWeight (const std::vector<Neuron*> & prevLayerNeurons);
 
-	void calculateError (const std::vector<Neuron*> & prevNeuronLayers, const int & neuronNumber);
-
-	void setError (const float & result);
-
+	
+	// GETTERS AND SETTERS
+	
+	/*
+	gets weight which defines connection between neuron no. i from prev. layer with this neuron
+	*/
+	float getWeight (const int & i);
 
 	/*
 	gets calculated output
@@ -67,12 +79,18 @@ public:
 	*/
 	float getOutput ();
 
-	float getWeight (const int & i); 
 
 	float getError ();
 
+	// sets error only for output layer
+	void setError (const float & result);
+
 	// ONLY FOR INPUT LAYER
 	void setOutput (const float & out);
+
+	// Set learning parameters values.
+	static void setParameters (const float alpha, const float beta, const float eta);
+
 
 private:
 	std::vector <float> weight;
@@ -82,7 +100,6 @@ private:
 	float output;
 	float sum;
 	
-
 };
 
 

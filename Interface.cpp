@@ -15,7 +15,7 @@ Interface::Interface (int argc, char* argv[]) : mArgCount (argc) {
                  mapParamStrings[parameter].first == "") {
             std::string filename (argv[i + 1]);
             mapParamStrings[parameter].first = mapParamStrings[mapParamStrings[parameter].second].first = filename;
-            i++;
+            ++i;
             continue;
         }
         else {

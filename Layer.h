@@ -9,8 +9,8 @@
 
 class Layer {
 public:
-    // Layer container (first - input, last - output and in between - hidden)
-    typedef std::vector<Layer*> Layers;
+	// Layer container (first - input, last - output and in between - hidden)
+	typedef std::vector<Layer*> Layers;
 
 	Layer ();
 	~Layer ();
@@ -31,17 +31,8 @@ public:
 	
 	void resetLayer ();
 
-
-	//temp funtion
-	void printOutput () {
-		std::cout << neurons [0]->getOutput ();
-	}
-
-	float getOutput () {
-		return neurons [0]->getOutput ();
-	}
-
-
+	float getOutput ();
+	
 	/*
 	ONLY FOR INPUT LAYERS
 	TO DO (maybe) - CREATE InputLayer : Layer class
@@ -50,11 +41,9 @@ public:
 	*/
 	void setOutput ( ProteinData* proteinData);
 	
-	
-	std::vector<Neuron*> getNeurons () const;
-	
 	unsigned int getLayerSize ();
 	
+	std::vector<Neuron*> getNeurons () const;
 
 private:
 	std::vector <Neuron*> neurons;

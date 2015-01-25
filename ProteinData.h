@@ -1,4 +1,3 @@
-//@author Andrzej Siadkowski
 //data container with for proteins
 
 #ifndef PROTEINDATA
