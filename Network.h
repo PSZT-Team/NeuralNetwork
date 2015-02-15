@@ -11,19 +11,6 @@
 
 /**
     Main project class. Aggregates all network layers, interface and statistics.
-    
-	DONE
-	- Try to generate own test data and import it from file instead of main dataset.
-	- Try to normalize data in case network is causing problems.
-	- Test, test and test with good result reporting.
-	- Delete useless fragments of code. Especially those with tag TEMP.
-
-    TODO
-      Will be added in network.config file.
-    - Create diagrams in Excel.
-    - Comment all methods and attributes yet uncommented.
-      Optionally bound these fragments into __VERBOSE or __PRINT_ALL defines.
-    - Create project documentation.
 */
 class Network {
 public:

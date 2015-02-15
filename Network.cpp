@@ -107,7 +107,6 @@ void Network::loadParameters () {
 	std::cout << "Alpha: " << alpha << ", Beta: " << beta << ", Eta: " << eta << "\n\n";
 	std::cout << "Input neurons: " << inputNeurons << ", Output neurons: " << outputNeurons << "\n";
 	std::cout << "Hidden layers: " << hiddenLayers << ". Hidden neurons: ";
-	// TODO FIND HIDDEN NEURONS
 	std::cout << "\n";
 #endif
 

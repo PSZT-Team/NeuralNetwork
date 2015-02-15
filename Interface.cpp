@@ -26,7 +26,6 @@ Interface::Interface (int argc, char* argv[]) : mArgCount (argc) {
 }
 
 void Interface::configureParameters () {
-    // TODO Consider loading these from file.
     mapParamBools["--usage"] = std::make_pair (false, "-u");
     mapParamBools["-u"] = std::make_pair (false, "--usage");
     mapParamBools["--help"] = std::make_pair (false, "-h");
@@ -60,11 +59,22 @@ void Interface::printParams () {
 }
 
 void Interface::printHelp () {
-    std::cout << mHelpMessage << "\n\n";
+    std::cout << " >> Help:\n";
+    std::cout << std::left;
+    std::cout << "Protein analysis based on Neural Network\n";
+    std::cout << "Program helps in deciding whether particular proteins react with specific enzymes.\n";
+    std::cout << "Use   --usage   parameter to check available options.\n";
 }
 
 void Interface::printUsage () {
-    std::cout << mUsageMessage << "\n\n";
+    std::cout << " >> Usage:\n";
+    std::cout << std::left;
+    int size = 35;
+    std::cout << std::setw (size) << " -h | --help" << " : Prints useful information about program.\n";
+    std::cout << std::setw (size) << " -u | --usage" << " : Prints message with possible input parameters.\n";
+    std::cout << std::setw (size) << " -f | --file [filename]" << " : Input file with information about boxes.\n";
+    std::cout << std::setw (size) << " -o | --output [filename]" << " : Output file to be created with program results.\n";
+    std::cout << std::setw (size) << " -s | --stats [filename]" << " : Output file to be created with statistics.\n";
 }
 
 std::string Interface::getStringParam (const std::string key) {

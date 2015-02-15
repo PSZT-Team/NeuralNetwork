@@ -70,7 +70,6 @@ public:
     void setCapacity (const unsigned int capacity); // Set new capacity value.
     void setIterationsNumber (const unsigned int iterationsNumber); // Set number of learning and testing iterations.
 
-    // TEMP
     // Fills mData with random test values
     void fillWithRandomData () {
         std::srand (unsigned (time (NULL)));
@@ -93,7 +92,6 @@ private:
     // Number of all records
     unsigned int mCapacity;
 
-    // TEMP
     // Generates random pair with positive or negative values.
     std::pair <bool, bool> generatePair () {
         bool expected;
