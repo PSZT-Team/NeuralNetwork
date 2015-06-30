@@ -2,29 +2,34 @@
 
 unsigned int CrossValidator::CV_ITERATIONS_NUMBER = CV_ITERATIONS_NUMBER_DEFAULT;
 
-CrossValidator::CrossValidator (unsigned int capacity)
-    : mCapacity (capacity) {
-}
+CrossValidator::CrossValidator(unsigned int capacity)
+    : mCapacity(capacity)
+{}
 
-void CrossValidator::addIterationInfo (IterationInfo<unsigned int> & iterationInfo) {
+void CrossValidator::addIterationInfo(IterationInfo<unsigned int> & iterationInfo)
+{
     // Insert only if limit is not crossed
-    if (mIterationCount < CV_ITERATIONS_NUMBER) {
-        mData.push_back (iterationInfo);
+    if (mIterationCount < CV_ITERATIONS_NUMBER)
+    {
+        mData.push_back(iterationInfo);
         ++mIterationCount;
     }
 }
 
-void CrossValidator::addIterationInfo (TestResults & testResults) {
+void CrossValidator::addIterationInfo(TestResults & testResults)
+{
     // If results are empty.
-    if (testResults.size () == 0) {
-        std::cout << "\n  <!> ERROR <!>\n"; 
+    if (testResults.size() == 0)
+    {
+        std::cout << "\n  <!> ERROR <!>\n";
         std::cout << "  Provided results are empty!\n";
         std::cout << "  Iteration: " << mIterationCount << " (counting from 0).\n";
-        std::cout << "  Expected results number: " << getTestSetSize () << ".\n";
+        std::cout << "  Expected results number: " << getTestSetSize() << ".\n";
         return;
     }
     // Otherwise...
-    else {
+    else
+    {
         // Set new IterationInfo
         IterationInfo<unsigned int> II;
 
@@ -32,7 +37,8 @@ void CrossValidator::addIterationInfo (TestResults & testResults) {
         II.id = mIterationCount;
 
         // For each <bool, bool> pair check classification.
-        for (std::pair<bool, bool> & result : testResults) {
+        for (std::pair<bool, bool> & result : testResults)
+        {
 
             // True positive
             if (result.first && result.second)
@@ -63,43 +69,48 @@ void CrossValidator::addIterationInfo (TestResults & testResults) {
         // Sensitivity:
         denom = (float)(II.mTP + II.mFN);
         II.mSensitivity = (II.mTP) / denom;
-        
+
         // AUC:
         denom = (float)(II.mFP + II.mTP);
         denom != 0.f ? II.mAUC = (1.f + II.mSensitivity - (II.mFP / denom)) / 2.f : II.mAUC = 0.f;
-        
+
         // F1 score:
         denom = (float)((II.mTP + II.mFN) + (II.mTP + II.mFP));
         denom != 0.f ? II.mF1 = 2.f * II.mTP / denom : II.mF1 = 0.f;
-        
+
         // MCC:
-        denom = (float)sqrt ((II.mTP + II.mFN) * (II.mTP + II.mFP) * (II.mTN + II.mFN) * (II.mTN + II.mFP));
+        denom = (float)sqrt((II.mTP + II.mFN) * (II.mTP + II.mFP) * (II.mTN + II.mFN) * (II.mTN + II.mFP));
         denom != 0.f ? II.mMCC = ((float)II.mTP * II.mTN - (float)II.mFP * II.mFN) / denom : II.mMCC = 0.f;
 
         // Error rate and Geometrical mean:
         II.mErrorRate = 1.f - II.mAccuracy;
-        II.mGMean = sqrt (II.mSensitivity * II.mSpecificity);
+        II.mGMean = sqrt(II.mSensitivity * II.mSpecificity);
 
         // New iteration is ready to be inserted.
-        addIterationInfo (II);
+        addIterationInfo(II);
     }
 }
 
-CrossValidator::DataContainer * CrossValidator::getDataContainer () {
+CrossValidator::DataContainer * CrossValidator::getDataContainer()
+{
     return &mData;
 }
 
-unsigned int CrossValidator::getTestSetSize () {
+unsigned int CrossValidator::getTestSetSize()
+{
     return mCapacity / CV_ITERATIONS_NUMBER;
 }
 
-unsigned int CrossValidator::getIterationStartRecordPosition () {
+unsigned int CrossValidator::getIterationStartRecordPosition()
+{
     return (mCapacity / CV_ITERATIONS_NUMBER) * mIterationCount;
 }
 
-IterationInfo<float> CrossValidator::getAverageIterationInfo () {
+IterationInfo<float> CrossValidator::getAverageIterationInfo()
+{
     IterationInfo<float> averageII;
-    for (unsigned int iteration = 0; iteration < CV_ITERATIONS_NUMBER; ++iteration) {
+    for (unsigned int iteration = 0; iteration < CV_ITERATIONS_NUMBER; ++iteration)
+    {
         averageII += mData[iteration];
     }
     averageII /= (float)CV_ITERATIONS_NUMBER;
@@ -107,11 +118,13 @@ IterationInfo<float> CrossValidator::getAverageIterationInfo () {
     return averageII;
 }
 
-void CrossValidator::setCapacity (const unsigned int capacity) {
+void CrossValidator::setCapacity(const unsigned int capacity)
+{
     mCapacity = capacity;
 
 #ifdef __VERBOSE
-    if (capacity % CV_ITERATIONS_NUMBER != 0) {
+    if (capacity % CV_ITERATIONS_NUMBER != 0)
+    {
         std::cout << "\n <!> WARNING <!>\n";
         std::cout << "  Number of all records is not divisible by iteration number.\n";
         std::cout << "  To achieve equinumerous test sets, some records will be ignored.\n";
@@ -119,6 +132,7 @@ void CrossValidator::setCapacity (const unsigned int capacity) {
 #endif
 }
 
-void CrossValidator::setIterationsNumber (const unsigned int iterationsNumber) {
+void CrossValidator::setIterationsNumber(const unsigned int iterationsNumber)
+{
     CV_ITERATIONS_NUMBER = iterationsNumber;
 }

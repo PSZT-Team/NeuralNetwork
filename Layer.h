@@ -7,47 +7,45 @@
 #include "Neuron.h"
 #include "ProteinData.h"
 
-class Layer {
+class Layer
+{
 public:
-	// Layer container (first - input, last - output and in between - hidden)
-	typedef std::vector<Layer*> Layers;
+    // Layer container (first - input, last - output and in between - hidden)
+    typedef std::vector<Layer*> Layers;
 
-	Layer ();
-	~Layer ();
+    Layer();
+    ~Layer();
 
-	Layer (const unsigned int& size, const unsigned int& prevLayerSize);
+    Layer(const unsigned int& size, const unsigned int& prevLayerSize);
 
-	void initializeLayer (const unsigned int& size, const unsigned int& prevLayerSize);
-	
-	void commandToCalculate (const Layer& prevLayer);
+    void initializeLayer(const unsigned int& size, const unsigned int& prevLayerSize);
 
-	void calculateOutput (const Layer& prevLayer);
-	
-	void calculateErrors (const Layer& nextLayer);
+    void commandToCalculate(const Layer& prevLayer);
 
-	void correctWeights(const Layer& prevLayer);
+    void calculateOutput(const Layer& prevLayer);
 
-	void outputLayerError (const int & output);
-	
-	void resetLayer ();
+    void calculateErrors(const Layer& nextLayer);
 
-	float getOutput ();
-	
-	/*
-	ONLY FOR INPUT LAYERS
-	TO DO (maybe) - CREATE InputLayer : Layer class
-	function sets outputs as data from protein data,
-	and resets wage.
-	*/
-	void setOutput ( ProteinData* proteinData);
-	
-	unsigned int getLayerSize ();
-	
-	std::vector<Neuron*> getNeurons () const;
+    void correctWeights(const Layer& prevLayer);
+
+    void outputLayerError(const int & output);
+
+    void resetLayer();
+
+    float getOutput();
+
+    /*
+     * Only for input layers.
+     */
+    void setOutput(ProteinData* proteinData);
+
+    unsigned int getLayerSize();
+
+    std::vector<Neuron*> getNeurons() const;
 
 private:
-	std::vector <Neuron*> neurons;
-	int layerSize;
+    std::vector <Neuron*> neurons;
+    int layerSize;
 };
 
 #endif

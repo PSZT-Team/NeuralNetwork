@@ -1,12 +1,13 @@
 /*
     Holds all importatant calculation for current iteration.
-*/
+    */
 
 #ifndef ITERATION_INFO
 #define ITERATION_INFO
 
 template <typename Type>
-class IterationInfo {
+class IterationInfo
+{
 public:
     /// Iteration ID.
     unsigned int id = 0;
@@ -40,9 +41,10 @@ public:
     // Matthew's correlation coefficient = (TP * TN - FP * FN) / sqrt[ (TP + FN)(TP + FP)(TN + FN)(TN + FP) ]
     float mMCC = 0.f;
 
-    // Adds all values.    
-    template <typename T> 
-    IterationInfo & operator+= (const IterationInfo<T> & other) {
+    // Adds all values.
+    template <typename T>
+    IterationInfo & operator+= (const IterationInfo<T> & other)
+    {
         this->mTP += other.mTP;
         this->mTN += other.mTN;
         this->mFP += other.mFP;
@@ -61,7 +63,8 @@ public:
     }
 
     // Adds all values.
-    IterationInfo & operator/= (const float factor) {
+    IterationInfo & operator/= (const float factor)
+    {
         this->mTP /= factor;
         this->mTN /= factor;
         this->mFP /= factor;

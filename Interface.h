@@ -1,6 +1,6 @@
 /**
     Organizes input parameters, filenames and displays useful information.
-*/
+    */
 
 #ifndef INTERFACE
 #define INTERFACE
@@ -10,27 +10,30 @@
 #include <map>
 #include <iomanip>
 
-class Interface {
-public:    
-    Interface () {};
-    ~Interface () {};
+class Interface
+{
+public:
+    Interface()
+    {};
+    ~Interface()
+    {};
 
     // Constructor with input parameters
-    Interface (int argc, char* argv[]);
+    Interface(int argc, char* argv[]);
 
     // Configures maps with proper parameters
-    void configureParameters ();
+    void configureParameters();
 
     // Prints all input parameters
-    void printParams ();
+    void printParams();
 
     // Prints some helpful information to the user before terminating.
-    void printUsage ();
-    void printHelp ();
+    void printUsage();
+    void printHelp();
 
-	// Getters
-	std::string getStringParam (const std::string key);
-    bool getBoolParam (const std::string key);
+    // Getters
+    std::string getStringParam(const std::string key);
+    bool getBoolParam(const std::string key);
 
 private:
     int mArgCount = 0;

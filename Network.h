@@ -11,55 +11,41 @@
 
 /**
     Main project class. Aggregates all network layers, interface and statistics.
-    
-	DONE
-	- Try to generate own test data and import it from file instead of main dataset.
-	- Try to normalize data in case network is causing problems.
-	- Test, test and test with good result reporting.
-	- Delete useless fragments of code. Especially those with tag TEMP.
-
-    TODO
-      Will be added in network.config file.
-    - Create diagrams in Excel.
-    - Comment all methods and attributes yet uncommented.
-      Optionally bound these fragments into __VERBOSE or __PRINT_ALL defines.
-    - Create project documentation.
-*/
-class Network {
+  */
+class Network
+{
 public:
-    Network () {
-    };
-    ~Network () {
-    };
+    Network()
+    {};
+    ~Network()
+    {};
 
     // Constructor with input parameters to be passed to Interface
-    Network (int argc, char* argv[]);
+    Network(int argc, char* argv[]);
 
     // Main class method. Includes all operations and interfaces.
-    void run ();
+    void run();
 
 private:
     // Load parameters from XML config file.
-    void loadParameters ();
+    void loadParameters();
 
     // Load data from file (if given)
-    bool acquireData ();
+    bool acquireData();
 
     // Saving results to file (if needed)
-    void saveResults ();
+    void saveResults();
 
     // Saving stats to file (if needed)
-    void saveStats ();
+    void saveStats();
 
-    void initializeLayers (const int& inputLayer, const int& hiddenLayer, const int& outputLayer);
+    void initializeLayers(const int& inputLayer, const int& hiddenLayer, const int& outputLayer);
 
-    void initializeLayers (std::vector<int> layers);
+    void initializeLayers(std::vector<int> layers);
 
-	
-
-    void learn (const std::vector<ProteinData *> data);
-    void test (CrossValidator::TestResults & results, std::vector<ProteinData*> data);
-	void resetNetwork ();
+    void learn(const std::vector<ProteinData *> data);
+    void test(CrossValidator::TestResults & results, std::vector<ProteinData*> data);
+    void resetNetwork();
     // Network modules
     Interface mInterface;
     DataCollector mDataCollector;
@@ -68,7 +54,6 @@ private:
     XMLParser mXMLParser;
 
     Layer::Layers mLayersTable;
-
 };
 
 #endif

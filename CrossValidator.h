@@ -1,7 +1,7 @@
 /**
     Manages cross validation procedure, holds all necessary validation
     indicators and results. Generates stats to be saved.
-*/
+    */
 
 #ifndef CROSS_VALIDATOR
 #define CROSS_VALIDATOR
@@ -19,7 +19,8 @@
 #include <iostream>
 #include <iomanip>
 
-class CrossValidator {
+class CrossValidator
+{
 public:
     // Iterations for Network to learn and test results.
     static unsigned int CV_ITERATIONS_NUMBER;
@@ -34,52 +35,54 @@ public:
     // \param int : Number of all iterations.
     typedef std::vector <IterationInfo<unsigned int> > DataContainer;
 
-    CrossValidator () {
-    };
-    ~CrossValidator () {
-    };
+    CrossValidator()
+    {};
+    ~CrossValidator()
+    {};
 
     // Constructor with additional parameters.
     // \param unsigned int : Number of all records.
-    CrossValidator (unsigned int capacity);
+    CrossValidator(unsigned int capacity);
 
     // Insert new set of data.
     // \param IterationInfo : New iteration to be inserted.
-    void addIterationInfo (IterationInfo<unsigned int> & iterationInfo);
+    void addIterationInfo(IterationInfo<unsigned int> & iterationInfo);
 
     // Insert new set of data based on provided results.
     // \param TestResult : Current iteration results.
-    void addIterationInfo (TestResults & testResults);
+    void addIterationInfo(TestResults & testResults);
 
     /// Getters
 
     // Returns pointer to DataContainer of this object.
-    DataContainer * getDataContainer ();
+    DataContainer * getDataContainer();
 
     // Return number of records for next test set.
-    unsigned int getTestSetSize ();
+    unsigned int getTestSetSize();
 
     // Return first unsused record number to be included in a next test set.
-    unsigned int getIterationStartRecordPosition ();
+    unsigned int getIterationStartRecordPosition();
 
     // Return average values from all IterationInfo's holding in this object's dataset.
-    IterationInfo<float> getAverageIterationInfo ();
+    IterationInfo<float> getAverageIterationInfo();
 
     /// Setters
 
-    void setCapacity (const unsigned int capacity); // Set new capacity value.
-    void setIterationsNumber (const unsigned int iterationsNumber); // Set number of learning and testing iterations.
+    void setCapacity(const unsigned int capacity); // Set new capacity value.
+    void setIterationsNumber(const unsigned int iterationsNumber); // Set number of learning and testing iterations.
 
-    // TEMP
     // Fills mData with random test values
-    void fillWithRandomData () {
-        std::srand (unsigned (time (NULL)));
-        for (unsigned int iteration = 0; iteration < CV_ITERATIONS_NUMBER; ++iteration) {
+    void fillWithRandomData()
+    {
+        std::srand(unsigned(time(NULL)));
+        for (unsigned int iteration = 0; iteration < CV_ITERATIONS_NUMBER; ++iteration)
+        {
             TestResults testResults;
-            for (unsigned int iterSize = 0; iterSize < this->getTestSetSize (); ++iterSize) {
-                testResults.push_back (generatePair ());
+            for (unsigned int iterSize = 0; iterSize < this->getTestSetSize(); ++iterSize)
+            {
+                testResults.push_back(generatePair());
             }
-            this->addIterationInfo (testResults);
+            this->addIterationInfo(testResults);
         }
     }
 
@@ -95,12 +98,13 @@ private:
 
     // TEMP
     // Generates random pair with positive or negative values.
-    std::pair <bool, bool> generatePair () {
+    std::pair <bool, bool> generatePair()
+    {
         bool expected;
         bool result;
-        expected = std::rand () % 2 == 0 ? false : true;
-        result = std::rand () % 2 == 0 ? false : true;
-        return std::make_pair (expected, result);
+        expected = std::rand() % 2 == 0 ? false : true;
+        result = std::rand() % 2 == 0 ? false : true;
+        return std::make_pair(expected, result);
     }
 };
 

@@ -1,6 +1,6 @@
 /**
-	Manages results and stats output file generating.
-*/
+    Manages results and stats output file generating.
+    */
 
 #ifndef OUTPUT_MANAGER
 #define OUTPUT_MANAGER
@@ -18,32 +18,35 @@
 #include "Layer.h"
 #include "Utilities.h"
 
-class OutputManager {
+class OutputManager
+{
 public:
     // Formatted CV stats files widths.
     const static unsigned int CV_WIDTH = 107;
     const static unsigned int CV_GLOBAL_WIDTH = 150;
 
-    OutputManager() {};
-    ~OutputManager() {};
+    OutputManager()
+    {};
+    ~OutputManager()
+    {};
 
-	// Collects all data and saves results 
-	bool saveResults (DataCollector * dataCollector, bool defaultPath = true);
+    // Collects all data and saves results
+    bool saveResults(DataCollector * dataCollector, bool defaultPath = true);
 
     // Collects stats and saves them
     // \param bool : Whether to use predefined path for files.
-    bool saveStats (Layer::Layers * layers, CrossValidator * crossValidator, bool defaultPath = true);
+    bool saveStats(Layer::Layers * layers, CrossValidator * crossValidator, bool defaultPath = true);
 
     /// Setters
 
-    void setResultsFilename (const std::string);
-    void setStatsFilename (const std::string);
-    void setLayers (Layer::Layers * layers);
+    void setResultsFilename(const std::string);
+    void setStatsFilename(const std::string);
+    void setLayers(Layer::Layers * layers);
 
 private:
     // Saves global stats into special file.
     template <typename Type>
-    bool saveGlobalStats (IterationInfo<Type> * iterationInfo, const std::string currentDatetime);
+    bool saveGlobalStats(IterationInfo<Type> * iterationInfo, const std::string currentDatetime);
 
     // Returns row of data provided from cross validator in a text form.
     // \param DataContainer * : Pointer to dataset.
@@ -52,9 +55,9 @@ private:
     // \param (opt) bool isFormatted : Specifies whether row has to be formatted in columns (only matters if isGlobal == true).
     // \param (opt) bool isAverage : Specifies whether row is the latest row in the file and holds average values (only matters if isGlobal == false).
     // \param (opt) bool isDetailed : True if needed extra indicators saved in file (only if isGlobal == true).
-    std::string prepareRow (CrossValidator::DataContainer * dataContainer, const unsigned int iteration,
-                            bool isGlobal, bool isFormatted = false, bool isAverage = false,
-                            bool isDetailed = false);
+    std::string prepareRow(CrossValidator::DataContainer * dataContainer, const unsigned int iteration,
+                           bool isGlobal, bool isFormatted = false, bool isAverage = false,
+                           bool isDetailed = false);
 
     // Returns row of data provided from cross validator in a text form.
     // \param IterationInfo * : Pointer to particular data structure.
@@ -63,9 +66,9 @@ private:
     // \param (opt) bool isAverage : Specifies whether row is the latest row in the file and holds sum up values (only matters if isGlobal == false).
     // \param (opt) bool isDetailed : True if needed extra indicators saved in file (only if isGlobal == true).
     template <typename Type>
-    std::string prepareRow (IterationInfo<Type> * iterationInfo, bool isGlobal, 
-                            bool isFormatted = false, bool isAverage = false,
-                            bool isDetailed = false);
+    std::string prepareRow(IterationInfo<Type> * iterationInfo, bool isGlobal,
+                           bool isFormatted = false, bool isAverage = false,
+                           bool isDetailed = false);
 
     // Return string formatted to fit certain width.
     // \param Type value : Value to be formatted.
@@ -73,13 +76,13 @@ private:
     // \param (opt) char fill : Character used to fill missing space.
     // \param (opt) string separator : String to be put at the end to separate different columns.
     template <typename Type>
-    std::string formatWidth (const Type value, const unsigned int width, 
-                             const char fill = '0', const std::string separator = " | ", 
-                             bool showPos = false);
+    std::string formatWidth(const Type value, const unsigned int width,
+                            const char fill = '0', const std::string separator = " | ",
+                            bool showPos = false);
 
-	// Filenames (with default values)
-	std::string mResultsFilename = "results";
-	std::string mStatsFilename = "cv";
+    // Filenames (with default values)
+    std::string mResultsFilename = "results";
+    std::string mStatsFilename = "cv";
     Layer::Layers * mLayers;
 };
 
