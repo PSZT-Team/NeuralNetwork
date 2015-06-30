@@ -96,7 +96,6 @@ private:
     // Number of all records
     unsigned int mCapacity;
 
-    // TEMP
     // Generates random pair with positive or negative values.
     std::pair <bool, bool> generatePair()
     {

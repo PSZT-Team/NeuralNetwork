@@ -38,9 +38,6 @@ public:
 private:
     int mArgCount = 0;
 
-    std::string mUsageMessage = "Usage msg.";    // TEMP
-    std::string mHelpMessage = "Help msg.";
-
     // Param name => (if exists; associated param)
     std::map <std::string, std::pair<bool, std::string>> mapParamBools;
 
